@@ -18,7 +18,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const RootStack = () => {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, animationEnabled: false }}
+      screenOptions={{ headerShown: false, animationEnabled: true }}
     >
       <Stack.Screen name="Main" component={MainScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />

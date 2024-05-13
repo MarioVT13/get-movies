@@ -7,6 +7,7 @@ import {
   View,
   ViewStyle,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Screen, {
@@ -17,9 +18,13 @@ import Screen, {
 } from "../GlobalConsts";
 import Icon from "react-native-vector-icons/Feather";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
+import usePopularMovies from "../hooks/usePopularMovies";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function MainScreen() {
+  const { movies, isLoading, error } = usePopularMovies();
   const { navigate } = useNavigation<RootStackNavigationProp>();
+
   const isIOS = Platform.OS == "ios";
   const parentAnim = useRef<any>(null);
   const tasksAnim = useRef<any>(null);
@@ -31,21 +36,55 @@ export default function MainScreen() {
   //   }, [])
   // );
 
+  // return (
+  //   <View style={styles.parentContainer}>
+  //     {/* <View style={[styles.listContainer, shadowViewStyle]}></View> */}
+  //     <TouchableOpacity
+  //       // onPress={() => navigate("Details", { data: {} })}
+  //       onPress={() => navigate("Details", { data: {} })}
+  //       style={{ width: 50, height: 50, backgroundColor: "red" }}
+  //     >
+  //       <Icon
+  //         name={"chevron-right"}
+  //         size={30}
+  //         color={colors.blue}
+  //         style={{ opacity: 0.5 }}
+  //       />
+  //     </TouchableOpacity>
+  //   </View>
+  // );
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" />;
+  }
+
+  if (error || movies?.length == 0) {
+    // if (true) {
+    return <Text>Error: {error ?? "No movies to show"}</Text>;
+  }
+
   return (
     <View style={styles.parentContainer}>
-      {/* <View style={[styles.listContainer, shadowViewStyle]}></View> */}
-      <TouchableOpacity
-        // onPress={() => navigate("Details", { data: {} })}
-        onPress={() => navigate("Details", { data: {} })}
-        style={{ width: 50, height: 50, backgroundColor: "red" }}
-      >
-        <Icon
-          name={"chevron-right"}
-          size={30}
-          color={colors.blue}
-          style={{ opacity: 0.5 }}
-        />
-      </TouchableOpacity>
+      <FlatList
+        data={movies}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => navigate("Details", { data: {} })}>
+            <Text>{item?.title ?? "error *"}</Text>
+          </TouchableOpacity> // Displaying the title of each movie
+        )}
+        initialNumToRender={20}
+        showsVerticalScrollIndicator={false}
+        style={{}}
+        contentContainerStyle={{
+          width: "100%",
+          // height: "80%",
+          paddingTop: "10%",
+          paddingBottom: "20%",
+          paddingHorizontal: "8%",
+          backgroundColor: "orange",
+        }}
+      />
     </View>
   );
 
@@ -69,6 +108,7 @@ const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
     backgroundColor: colors.lightYellow,
+    paddingTop: "20%",
     alignItems: "center",
     justifyContent: "center",
   },

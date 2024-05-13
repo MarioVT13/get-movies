@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import RootStack from "./src/navigation/stacks/RootStack";
+import { SafeAreaView } from "react-native";
 
 function App() {
   useEffect(() => {
@@ -27,7 +28,9 @@ function App() {
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      <RootStack />
+      <SafeAreaView style={{ flex: 1, backgroundColor: "red" }}>
+        <RootStack />
+      </SafeAreaView>
     </NavigationContainer>
   );
 }

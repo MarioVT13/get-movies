@@ -37,8 +37,7 @@ export const colors = {
   semiTransparent: "rgba(0,0,0,0.3)",
 };
 
-export const plusBtnAlertMessage =
-  "Yes, this would be the place to add a new ToDo task, if the app is completed :)";
+export const errorLoadingMovieList = "Something went wrong";
 export const editBtnAlertMessage = "It will edit the existing task. ";
 export const urgentBtnAlertMessage =
   'It will toggle the "urgent" status of the task.';

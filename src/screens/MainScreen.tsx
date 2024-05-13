@@ -15,6 +15,7 @@ import Screen, {
   lVerticalScale,
   plusBtnAlertMessage,
   colors,
+  errorLoadingMovieList,
 } from "../GlobalConsts";
 import Icon from "react-native-vector-icons/Feather";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
@@ -55,12 +56,20 @@ export default function MainScreen() {
   // );
 
   if (isLoading) {
-    return <ActivityIndicator size="large" />;
+    return (
+      <View style={styles.parentContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
 
   if (error || movies?.length == 0) {
-    // if (true) {
-    return <Text>Error: {error ?? "No movies to show"}</Text>;
+    return (
+      <View style={styles.parentContainer}>
+        <Text style={styles.errorText}>{errorLoadingMovieList}:</Text>
+        <Text style={styles.errorText}>{error ?? "No movies to show"}</Text>
+      </View>
+    );
   }
 
   return (
@@ -108,10 +117,17 @@ const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
     backgroundColor: colors.lightYellow,
-    paddingTop: "20%",
+    paddingTop: "10%",
     alignItems: "center",
     justifyContent: "center",
   },
+  errorText: {
+    color: colors.purple,
+    fontSize: lHorizontalScale(18),
+    paddingHorizontal: "10%",
+    textAlign: "center",
+  },
+
   listContainer: {
     width: "90%",
     height: "90%",

@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Constants from "expo-constants";
 
 const usePopularMovies = () => {
-  console.log("Constants: ", Constants);
+  const apiKey = process.env.EXPO_TMBD_API_KEY;
 
-  const apiKey =
-    Constants?.manifest2?.extra?.expoClient?.extra?.TMDB_API_KEY ?? "";
-  console.log("apiKey: ", apiKey);
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -33,7 +29,7 @@ const usePopularMovies = () => {
     };
 
     fetchPopularMovies();
-  }, []); // Empty dependency array ensures this effect runs only once after the initial render
+  }, []);
 
   console.log("MOVIES: ", movies);
   console.log("isLoading: ", isLoading);

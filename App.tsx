@@ -13,7 +13,7 @@ function App() {
         // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
         // Artificially delay for 2 seconds.
-        await new Promise((resolve) => setTimeout(resolve, 2 * 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1.5 * 1000));
       } catch (e) {
         console.warn(e);
       } finally {

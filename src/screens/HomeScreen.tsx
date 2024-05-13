@@ -1,35 +1,28 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
+  ActivityIndicator,
+  ImageBackground,
   Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  ViewStyle,
-  Alert,
-  ActivityIndicator,
 } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+// import { FlatList } from "react-native-gesture-handler";
 import Screen, {
-  lHorizontalScale,
-  lVerticalScale,
   colors,
   errorLoadingMovieList,
+  lHorizontalScale,
 } from "../GlobalConsts";
-import Icon from "react-native-vector-icons/Feather";
-import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
-import usePopularMovies from "../hooks/usePopularMovies";
-import { FlatList } from "react-native-gesture-handler";
-import { MoviesDataType } from "../types/DataTypes";
 import MovieListItem from "../components/MovieListItem";
+import usePopularMovies from "../hooks/usePopularMovies";
+import { MoviesDataType } from "../types/DataTypes";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function HomeScreen() {
   const { movies, isLoading, error } = usePopularMovies();
-  const { navigate } = useNavigation<RootStackNavigationProp>();
 
   const isIOS = Platform.OS == "ios";
   const parentAnim = useRef<any>(null);
-  const tasksAnim = useRef<any>(null);
 
   //       <Icon
   //         name={"chevron-right"}
@@ -56,7 +49,10 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.parentContainer}>
+    <ImageBackground
+      source={require("../../assets/get-movies-bg.jpg")}
+      style={styles.parentContainer}
+    >
       <FlatList
         data={movies}
         keyExtractor={(item: MoviesDataType) => item.id.toString()}
@@ -66,21 +62,11 @@ export default function HomeScreen() {
         initialNumToRender={10}
         showsVerticalScrollIndicator={false}
         numColumns={2} // this sets 2 items per row
-        style={{ backgroundColor: "pink" }}
         contentContainerStyle={styles.flatListContainer}
       />
-    </View>
+    </ImageBackground>
   );
 }
-
-const shadowViewStyle: ViewStyle = {
-  width: "100%",
-  height: "100%",
-  elevation: 0,
-  alignItems: "flex-end",
-  justifyContent: "flex-end",
-  borderTopLeftRadius: 0,
-};
 
 const styles = StyleSheet.create({
   parentContainer: {
@@ -90,9 +76,8 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     width: "100%",
-    paddingVertical: "10%",
+    paddingVertical: "20%",
     paddingHorizontal: "8%",
-    backgroundColor: "orange",
   },
   errorText: {
     color: colors.purple,
@@ -105,7 +90,7 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "90%",
     borderTopLeftRadius: Screen.screenWidth * 0.25,
-    overflow: "hidden",
+    // overflow: "hidden",
     shadowColor: colors.black,
     shadowOffset: {
       width: 1,

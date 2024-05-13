@@ -1,7 +1,8 @@
-export type DataType = {
+export type MoviesDataType = {
+  id: number;
   title: string;
-  description: string;
-  is_urgent: boolean;
-  created_at: number;
-  id?: string;
+  overview: string;
+  poster_path: string;
+  vote_average: number;
+  release_date: string;
 };

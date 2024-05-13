@@ -13,7 +13,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Screen, {
   lHorizontalScale,
   lVerticalScale,
-  plusBtnAlertMessage,
   colors,
   errorLoadingMovieList,
 } from "../GlobalConsts";
@@ -21,8 +20,10 @@ import Icon from "react-native-vector-icons/Feather";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import usePopularMovies from "../hooks/usePopularMovies";
 import { FlatList } from "react-native-gesture-handler";
+import { MoviesDataType } from "../types/DataTypes";
+import MovieListItem from "../components/MovieListItem";
 
-export default function MainScreen() {
+export default function HomeScreen() {
   const { movies, isLoading, error } = usePopularMovies();
   const { navigate } = useNavigation<RootStackNavigationProp>();
 
@@ -30,30 +31,12 @@ export default function MainScreen() {
   const parentAnim = useRef<any>(null);
   const tasksAnim = useRef<any>(null);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     parentAnim?.current && parentAnim?.current?.fadeInUpBig(400);
-  //     tasksAnim?.current && tasksAnim?.current?.fadeInUpBig(900);
-  //   }, [])
-  // );
-
-  // return (
-  //   <View style={styles.parentContainer}>
-  //     {/* <View style={[styles.listContainer, shadowViewStyle]}></View> */}
-  //     <TouchableOpacity
-  //       // onPress={() => navigate("Details", { data: {} })}
-  //       onPress={() => navigate("Details", { data: {} })}
-  //       style={{ width: 50, height: 50, backgroundColor: "red" }}
-  //     >
   //       <Icon
   //         name={"chevron-right"}
   //         size={30}
   //         color={colors.blue}
   //         style={{ opacity: 0.5 }}
   //       />
-  //     </TouchableOpacity>
-  //   </View>
-  // );
 
   if (isLoading) {
     return (
@@ -76,32 +59,18 @@ export default function MainScreen() {
     <View style={styles.parentContainer}>
       <FlatList
         data={movies}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigate("Details", { data: {} })}>
-            <Text>{item?.title ?? "error *"}</Text>
-          </TouchableOpacity> // Displaying the title of each movie
-        )}
-        initialNumToRender={20}
-        showsVerticalScrollIndicator={false}
-        style={{}}
-        contentContainerStyle={{
-          width: "100%",
-          // height: "80%",
-          paddingTop: "10%",
-          paddingBottom: "20%",
-          paddingHorizontal: "8%",
-          backgroundColor: "orange",
+        keyExtractor={(item: MoviesDataType) => item.id.toString()}
+        renderItem={({ item, index }) => {
+          return <MovieListItem item={item} index={index} />;
         }}
+        initialNumToRender={10}
+        showsVerticalScrollIndicator={false}
+        numColumns={2} // this sets 2 items per row
+        style={{ backgroundColor: "pink" }}
+        contentContainerStyle={styles.flatListContainer}
       />
     </View>
   );
-
-  function btnAlert() {
-    isIOS
-      ? Alert.alert(plusBtnAlertMessage)
-      : Alert.alert("", plusBtnAlertMessage);
-  }
 }
 
 const shadowViewStyle: ViewStyle = {
@@ -117,9 +86,13 @@ const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
     backgroundColor: colors.lightYellow,
-    paddingTop: "10%",
-    alignItems: "center",
     justifyContent: "center",
+  },
+  flatListContainer: {
+    width: "100%",
+    paddingVertical: "10%",
+    paddingHorizontal: "8%",
+    backgroundColor: "orange",
   },
   errorText: {
     color: colors.purple,
@@ -147,24 +120,6 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: colors.purple,
     justifyContent: "flex-end",
-  },
-  titleTextContainer: {
-    flexDirection: "row",
-    width: "100%",
-    height: "10%",
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  plusBtnContainer: {
-    height: "100%",
-    width: "20%",
-    marginLeft: "18%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  titleText: {
-    color: colors.white,
-    fontSize: lHorizontalScale(18),
   },
   contentContainer: {
     width: "100%",

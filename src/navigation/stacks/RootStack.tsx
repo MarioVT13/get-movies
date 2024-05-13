@@ -4,13 +4,13 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from "@react-navigation/stack";
-import MainScreen from "../../screens/MainScreen";
+import HomeScreen from "../../screens/HomeScreen";
 import DetailsScreen from "../../screens/DetailsScreen";
-import { DataType } from "../../types/DataTypes";
+import { MoviesDataType } from "../../types/DataTypes";
 
 export type RootStackParamList = {
-  Main: { data?: DataType } | undefined;
-  Details: { data: DataType | null };
+  Home: { data: MoviesDataType } | undefined;
+  Details: { data: MoviesDataType | null };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -20,7 +20,7 @@ const RootStack = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false, animationEnabled: true }}
     >
-      <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
   );

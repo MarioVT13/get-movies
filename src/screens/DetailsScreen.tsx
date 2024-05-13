@@ -44,6 +44,12 @@ export default function DetailsScreen() {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.contentContainer}>
+        <BackHeader
+          title={title}
+          isUrgent={is_urgent}
+          created={created_at}
+          style={{ borderTopRightRadius: Screen.screenWidth * 0.08 }}
+        />
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{

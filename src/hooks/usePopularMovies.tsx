@@ -22,7 +22,7 @@ const usePopularMovies = () => {
         );
         setMovies(response.data.results);
       } catch (err: unknown) {
-        setError(err?.message);
+        setError(err?.message ?? "");
       } finally {
         setIsLoading(false);
       }
@@ -31,9 +31,9 @@ const usePopularMovies = () => {
     fetchPopularMovies();
   }, []);
 
-  console.log("MOVIES: ", movies);
-  console.log("isLoading: ", isLoading);
-  console.log("ERROR: ", error);
+  //   console.log("MOVIES: ", movies);
+  //   console.log("isLoading: ", isLoading);
+  //   console.log("ERROR: ", error);
 
   return { movies, isLoading, error };
 };

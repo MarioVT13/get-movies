@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Constants from "expo-constants";
 
 const usePopularMovies = () => {
+  console.log("Constants: ", Constants);
+
+  const apiKey =
+    Constants?.manifest2?.extra?.expoClient?.extra?.TMDB_API_KEY ?? "";
+  console.log("apiKey: ", apiKey);
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,7 +20,7 @@ const usePopularMovies = () => {
           "https://api.themoviedb.org/3/movie/popular",
           {
             params: {
-              api_key: "9832af988b9228550b81b98fee2efec8",
+              api_key: apiKey,
             },
           }
         );

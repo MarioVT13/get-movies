@@ -22,6 +22,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "TMDB_API_KEY": "9832af988b9228550b81b98fee2efec8"
     }
   }
 }

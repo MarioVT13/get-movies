@@ -30,14 +30,10 @@ export default function DetailsScreen() {
     >
       <Animated.View
         style={styles.shadowStyle}
-        entering={ZoomIn.duration(300)
-          .springify()
-          .mass(2)
-          .damping(20)
-          .delay(100)}
+        entering={ZoomIn.duration(400).mass(2).damping(20).delay(100)}
       >
         <View style={styles.contentContainer}>
-          <BackHeader title={title} style={{}} />
+          <BackHeader title={title} rating={vote_average} style={{}} />
           <ScrollView
             contentContainerStyle={styles.scrollView}
             showsVerticalScrollIndicator={false}
@@ -93,7 +89,7 @@ const styles = StyleSheet.create({
     fontFamily: "serifLight",
   },
   shadowStyle: {
-    height: "80%",
+    height: "85%",
     borderTopRightRadius: Screen.screenWidth * 0.1,
     borderBottomLeftRadius: Screen.screenWidth * 0.05,
     shadowColor: colors.black,

@@ -12,14 +12,16 @@ import { Icon as ElementIcon } from "react-native-elements";
 import Icon from "react-native-vector-icons/Feather";
 import { lHorizontalScale, lVerticalScale } from "../GlobalConsts";
 import { colors } from "../GlobalConsts";
+import RatingComponent from "./RatingComponent";
 
 interface Props {
   title: string;
+  rating: number;
   style: Partial<ViewStyle>;
 }
 
 export default function BackHeader(props: Props) {
-  const { title, style } = props;
+  const { title, rating, style } = props;
   const { goBack } = useNavigation();
 
   return (
@@ -35,7 +37,10 @@ export default function BackHeader(props: Props) {
           style={{}}
         />
       </TouchableOpacity>
-      <Text style={styles.titleText}>{title}</Text>
+      <Text style={styles.titleText}>{title.toUpperCase()}</Text>
+      <View style={styles.ratingComponentContainer}>
+        <RatingComponent rating={rating} />
+      </View>
     </View>
   );
 
@@ -62,9 +67,12 @@ const styles = StyleSheet.create({
   titleText: {
     width: "60%",
     color: colors.white,
-    fontSize: lHorizontalScale(20),
+    fontSize: lHorizontalScale(18),
     fontFamily: "serifLight",
     textAlign: "center",
-    marginRight: "20%",
+    fontWeight: "bold",
+  },
+  ratingComponentContainer: {
+    width: "20%",
   },
 });

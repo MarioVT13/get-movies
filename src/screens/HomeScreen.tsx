@@ -27,7 +27,7 @@ export default function HomeScreen() {
   if (isLoading) {
     return (
       <View style={styles.parentContainer}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator color={colors.white} size="large" />
       </View>
     );
   }

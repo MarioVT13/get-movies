@@ -5,7 +5,7 @@ const usePopularMovies = () => {
   const apiKey = process.env.EXPO_TMBD_API_KEY;
 
   const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {

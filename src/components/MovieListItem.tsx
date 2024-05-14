@@ -1,5 +1,7 @@
 import {
+  ActivityIndicator,
   Image,
+  ImageBackground,
   Platform,
   StyleSheet,
   Text,
@@ -39,7 +41,7 @@ export default function MovieListItem(props: MovieItem) {
         ]}
         onPress={() => navigate("Details", { data: item })}
       >
-        <Image
+        <ImageBackground
           source={
             imageUri
               ? {
@@ -48,7 +50,15 @@ export default function MovieListItem(props: MovieItem) {
               : require("../../assets/missing-poster.jpg")
           }
           style={styles.image}
-        />
+        >
+          {!imageUri && (
+            <ActivityIndicator
+              color={colors.white}
+              style={styles.indicator}
+              size="large"
+            />
+          )}
+        </ImageBackground>
         <Text style={styles.title}>{title ?? "Unknown title"}</Text>
       </TouchableOpacity>
     );
@@ -83,6 +93,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
     textAlign: "center",
     height: "auto",
+  },
+  indicator: {
+    alignSelf: "center",
+    position: "absolute",
+    top: "40%",
   },
   shadowStyle: {
     shadowColor: colors.black,

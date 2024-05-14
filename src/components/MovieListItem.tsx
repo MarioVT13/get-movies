@@ -1,18 +1,17 @@
+import { useNavigation } from "@react-navigation/native";
+import { useMemo } from "react";
 import {
   ActivityIndicator,
-  Image,
   ImageBackground,
   Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
-import { MoviesDataType } from "../types/DataTypes";
+import Animated, { BounceIn, StretchInX } from "react-native-reanimated";
+import { colors, lVerticalScale } from "../GlobalConsts";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
-import { useNavigation } from "@react-navigation/native";
-import { colors, lHorizontalScale, lVerticalScale } from "../GlobalConsts";
-import { useMemo } from "react";
+import { MoviesDataType } from "../types/DataTypes";
 
 interface MovieItem {
   item: MoviesDataType;
@@ -33,34 +32,43 @@ export default function MovieListItem(props: MovieItem) {
 
   const listItem = useMemo(() => {
     return (
-      <TouchableOpacity
+      <Animated.View
         style={[
           styles.parentContainer,
           isIOS ? {} : styles.shadowStyle,
           { marginRight: index % 2 == 0 ? "4%" : 0 },
         ]}
-        onPress={() => navigate("Details", { data: item })}
+        entering={StretchInX.duration(800)
+          .springify()
+          .mass(1)
+          .damping(40)
+          .delay((index + 1) * 250)}
       >
-        <ImageBackground
-          source={
-            imageUri
-              ? {
-                  uri: `https://image.tmdb.org/t/p/original${imageUri}`,
-                }
-              : require("../../assets/missing-poster.jpg")
-          }
-          style={styles.image}
+        <TouchableOpacity
+          style={[{ width: "100%" }]}
+          onPress={() => navigate("Details", { data: item })}
         >
-          {!imageUri && (
-            <ActivityIndicator
-              color={colors.white}
-              style={styles.indicator}
-              size="large"
-            />
-          )}
-        </ImageBackground>
-        <Text style={styles.title}>{title ?? "Unknown title"}</Text>
-      </TouchableOpacity>
+          <ImageBackground
+            source={
+              imageUri
+                ? {
+                    uri: `https://image.tmdb.org/t/p/original${imageUri}`,
+                  }
+                : require("../../assets/missing-poster.jpg")
+            }
+            style={styles.image}
+          >
+            {!imageUri && (
+              <ActivityIndicator
+                color={colors.rust}
+                style={styles.indicator}
+                size="large"
+              />
+            )}
+          </ImageBackground>
+          <Text style={styles.title}>{title ?? "Unknown title"}</Text>
+        </TouchableOpacity>
+      </Animated.View>
     );
   }, [title, poster_path, backdrop_path]);
 
@@ -90,7 +98,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: lVerticalScale(12),
     color: colors.lightGray,
-    backgroundColor: colors.black,
     textAlign: "center",
     height: "auto",
   },

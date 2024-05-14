@@ -1,19 +1,17 @@
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  Alert,
-  Animated,
-  Platform,
   ImageBackground,
+  Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import Animated, { ZoomIn } from "react-native-reanimated";
+import Screen, { colors, lHorizontalScale } from "../GlobalConsts";
 import BackHeader from "../components/BackHeader";
-import Screen, { lHorizontalScale, colors } from "../GlobalConsts";
 
 export default function DetailsScreen() {
   const navParams: Partial<object> | any = useRoute().params;
@@ -24,14 +22,20 @@ export default function DetailsScreen() {
 
   const dateTime = dayjs(release_date).format("MMM-DD-YYYY");
   const isIOS = Platform.OS == "ios";
-  const animation = new Animated.Value(0);
 
   return (
     <ImageBackground
       source={require("../../assets/get-movies-bg.jpg")}
       style={styles.parentContainer}
     >
-      <View style={styles.shadowStyle}>
+      <Animated.View
+        style={styles.shadowStyle}
+        entering={ZoomIn.duration(300)
+          .springify()
+          .mass(2)
+          .damping(20)
+          .delay(100)}
+      >
         <View style={styles.contentContainer}>
           <BackHeader title={title} style={{}} />
           <ScrollView
@@ -44,7 +48,7 @@ export default function DetailsScreen() {
             <Text style={[styles.dateText]}>{dateTime}</Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     </ImageBackground>
   );
 }
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
     fontSize: lHorizontalScale(11),
   },
   scrollView: {
-    paddingHorizontal: "10%",
+    paddingHorizontal: "8%",
     paddingVertical: "20%",
   },
   descriptionText: {

@@ -11,6 +11,7 @@ function App() {
       try {
         // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
+
         // Artificially delay for 2 seconds.
         await new Promise((resolve) => setTimeout(resolve, 1 * 1000));
       } catch (e) {
@@ -26,7 +27,7 @@ function App() {
 
   return (
     <NavigationContainer>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <RootStack />
     </NavigationContainer>
   );

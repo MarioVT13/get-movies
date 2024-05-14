@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { MoviesDataType } from "../types/DataTypes";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import { useNavigation } from "@react-navigation/native";
@@ -12,7 +19,7 @@ interface MovieItem {
 
 export default function MovieListItem(props: MovieItem) {
   const { item, index } = props;
-  const { id, title, poster_path, backdrop_path } = item;
+  const { title, poster_path, backdrop_path } = item;
   const { navigate } = useNavigation<RootStackNavigationProp>();
   const imageUri =
     typeof poster_path === "string" && poster_path.length > 0
@@ -20,16 +27,17 @@ export default function MovieListItem(props: MovieItem) {
       : backdrop_path === "string" && backdrop_path.length > 0
       ? backdrop_path
       : null;
+  const isIOS = Platform.OS == "ios";
 
   const listItem = useMemo(() => {
     return (
       <TouchableOpacity
         style={[
           styles.parentContainer,
-          styles.shadowStyle,
+          isIOS ? {} : styles.shadowStyle,
           { marginRight: index % 2 == 0 ? "4%" : 0 },
         ]}
-        onPress={() => navigate("Details", { data: props.item })}
+        onPress={() => navigate("Details", { data: item })}
       >
         <Image
           source={
@@ -44,7 +52,7 @@ export default function MovieListItem(props: MovieItem) {
         <Text style={styles.title}>{title ?? "Unknown title"}</Text>
       </TouchableOpacity>
     );
-  }, [title, poster_path, id, backdrop_path]);
+  }, [title, poster_path, backdrop_path]);
 
   return listItem;
 }
@@ -59,6 +67,8 @@ const styles = StyleSheet.create({
     marginBottom: lVerticalScale(20),
     width: "48%", // 48% + 48% + 4% = 100%
     // we need the 4% to add some margin between the 2 items per row
+    borderColor: colors.lightGray,
+    borderWidth: 1,
   },
   image: {
     width: "100%",
@@ -78,7 +88,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOffset: { width: 2, height: 1 },
     shadowOpacity: 0.5,
-    shadowRadius: 6,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });

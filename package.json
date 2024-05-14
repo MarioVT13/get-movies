@@ -13,6 +13,7 @@
     "@react-navigation/stack": "^6.3.29",
     "axios": "^1.6.8",
     "babel-plugin-inline-dotenv": "^1.7.0",
+    "dayjs": "^1.11.11",
     "expo": "~51.0.2",
     "expo-splash-screen": "^0.27.4",
     "expo-status-bar": "~1.12.1",

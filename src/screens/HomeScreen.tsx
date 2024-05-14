@@ -7,9 +7,9 @@ import {
   Text,
   View,
 } from "react-native";
-// import { FlatList } from "react-native-gesture-handler";
 import Screen, {
   colors,
+  errorFindingMovies,
   errorLoadingMovieList,
   lHorizontalScale,
 } from "../GlobalConsts";
@@ -24,13 +24,6 @@ export default function HomeScreen() {
   const isIOS = Platform.OS == "ios";
   const parentAnim = useRef<any>(null);
 
-  //       <Icon
-  //         name={"chevron-right"}
-  //         size={30}
-  //         color={colors.blue}
-  //         style={{ opacity: 0.5 }}
-  //       />
-
   if (isLoading) {
     return (
       <View style={styles.parentContainer}>
@@ -43,7 +36,7 @@ export default function HomeScreen() {
     return (
       <View style={styles.parentContainer}>
         <Text style={styles.errorText}>{errorLoadingMovieList}:</Text>
-        <Text style={styles.errorText}>{error ?? "No movies to show"}</Text>
+        <Text style={styles.errorText}>{error ?? errorFindingMovies}</Text>
       </View>
     );
   }
@@ -71,7 +64,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
-    backgroundColor: colors.lightYellow,
     justifyContent: "center",
   },
   flatListContainer: {

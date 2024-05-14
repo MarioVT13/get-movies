@@ -3,29 +3,23 @@ import React from "react";
 import {
   Alert,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
   ViewStyle,
 } from "react-native";
 import { Icon as ElementIcon } from "react-native-elements";
 import Icon from "react-native-vector-icons/Feather";
-import {
-  editBtnAlertMessage,
-  lHorizontalScale,
-  lVerticalScale,
-  urgentBtnAlertMessage,
-} from "../GlobalConsts";
+import { lHorizontalScale, lVerticalScale } from "../GlobalConsts";
 import { colors } from "../GlobalConsts";
 
 interface Props {
   title: string;
-  isUrgent: boolean;
-  created: number;
   style: Partial<ViewStyle>;
 }
 
 export default function BackHeader(props: Props) {
-  const { title, isUrgent, created, style } = props;
+  const { title, style } = props;
   const { goBack } = useNavigation();
 
   return (
@@ -41,32 +35,14 @@ export default function BackHeader(props: Props) {
           style={{}}
         />
       </TouchableOpacity>
-
-      <View style={{ width: "40%" }} />
-
-      <TouchableOpacity
-        onPress={() => btnAlert(true)}
-        style={styles.rightBtnContainer}
-      >
-        <Icon name={"edit"} size={lVerticalScale(22)} color={colors.gray} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => btnAlert(false)}
-        style={[styles.rightBtnContainer, { marginRight: "4%" }]}
-      >
-        <Icon
-          name={"alert-circle"}
-          size={lVerticalScale(24)}
-          color={isUrgent ? colors.yellow : colors.gray}
-        />
-      </TouchableOpacity>
+      <Text style={styles.titleText}>{title}</Text>
     </View>
   );
 
-  function btnAlert(isEditBtn: boolean) {
-    if (isEditBtn) Alert.alert(editBtnAlertMessage);
-    else Alert.alert(urgentBtnAlertMessage);
-  }
+  // function btnAlert(isEditBtn: boolean) {
+  //   if (isEditBtn) Alert.alert(editBtnAlertMessage);
+  //   else Alert.alert(urgentBtnAlertMessage);
+  // }
 }
 
 const styles = StyleSheet.create({
@@ -75,19 +51,20 @@ const styles = StyleSheet.create({
     height: "12%",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
-    backgroundColor: colors.green,
+    justifyContent: "space-between",
+    backgroundColor: colors.antiqueBronze,
   },
   backBtnContainer: {
     height: "100%",
     width: "20%",
     justifyContent: "center",
-    marginLeft: "2%",
   },
-  rightBtnContainer: {
-    height: "100%",
-    width: "15%",
-    justifyContent: "center",
-    alignItems: "center",
+  titleText: {
+    width: "60%",
+    color: colors.white,
+    fontSize: lHorizontalScale(20),
+    fontFamily: "serifLight",
+    textAlign: "center",
+    marginRight: "20%",
   },
 });

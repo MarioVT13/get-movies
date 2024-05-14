@@ -5,7 +5,7 @@ import {
   Alert,
   Animated,
   Platform,
-  SafeAreaView,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -17,106 +17,59 @@ import Screen, { lHorizontalScale, colors } from "../GlobalConsts";
 
 export default function DetailsScreen() {
   const navParams: Partial<object> | any = useRoute().params;
-  const { title, is_urgent, description, created_at, id } = navParams?.data;
+  const { id, original_language, title, overview, vote_average, release_date } =
+    navParams?.data;
 
-  const dateTime = dayjs(created_at).format("MMM-DD HH:mm");
-  const dateTimeDetailed = dayjs(created_at).format("YYYY MMMM-DD (HH:mm)");
+  console.log("NAV_PARAMS: ", navParams);
+
+  const dateTime = dayjs(release_date).format("MMM-DD-YYYY");
   const isIOS = Platform.OS == "ios";
   const animation = new Animated.Value(0);
 
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: isIOS ? 200 : 800,
-      useNativeDriver: false,
-    }).start();
-  }, []);
-
-  const colorInterpolation = animation.interpolate({
-    inputRange: [0, 1],
-    // Converted hex colors to rgb, because of interpolate requirment
-    outputRange: ["rgb(255, 255, 224)", "rgb(255, 217, 146)"],
-  });
-  const animatedStyle = {
-    backgroundColor: colorInterpolation,
-  };
-
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
-      <View style={styles.contentContainer}>
-        <BackHeader
-          title={title}
-          isUrgent={is_urgent}
-          created={created_at}
-          style={{ borderTopRightRadius: Screen.screenWidth * 0.08 }}
-        />
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={{
-            paddingHorizontal: "10%",
-            paddingVertical: "20%",
-          }}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text style={styles.titleText}>{title}</Text>
-          <Text style={styles.descriptionText}>{description}</Text>
-        </ScrollView>
-        <TouchableOpacity
-          onPress={() => btnAlert()}
-          hitSlop={{ top: 30, left: 30, bottom: 30, right: 30 }}
-          style={styles.dateTextContainer}
-        >
-          <Text style={[styles.dateText]}>{dateTime}</Text>
-        </TouchableOpacity>
+    <ImageBackground
+      source={require("../../assets/get-movies-bg.jpg")}
+      style={styles.parentContainer}
+    >
+      <View style={styles.shadowStyle}>
+        <View style={styles.contentContainer}>
+          <BackHeader title={title} style={{}} />
+          <ScrollView
+            contentContainerStyle={styles.scrollView}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.descriptionText}>{overview}</Text>
+          </ScrollView>
+          <View style={styles.dateTextContainer}>
+            <Text style={[styles.dateText]}>{dateTime}</Text>
+          </View>
+        </View>
       </View>
-    </SafeAreaView>
+    </ImageBackground>
   );
-
-  function btnAlert() {
-    Alert.alert("Created on: " + dateTimeDetailed);
-  }
 }
 
 const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-    backgroundColor: colors.yellow,
-  },
   parentContainer: {
     flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    paddingTop: 30,
-  },
-  listContainer: {
-    width: "90%",
-    height: "90%",
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 1,
-      height: 0.5,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  titleText: {
-    color: colors.deepGray,
-    fontSize: lHorizontalScale(18),
-    marginBottom: "10%",
-    fontFamily: "serifLight",
+    justifyContent: "center",
+    alignItems: "center",
   },
   contentContainer: {
-    width: "100%",
-    height: "90%",
+    width: "90%",
+    height: "100%",
     backgroundColor: colors.white,
     alignItems: "flex-end",
     justifyContent: "center",
+    borderTopRightRadius: Screen.screenWidth * 0.1,
+    borderBottomLeftRadius: Screen.screenWidth * 0.05,
+    overflow: "hidden",
   },
+
   dateTextContainer: {
     backgroundColor: colors.semiTransparent,
     position: "absolute",
-    top: 20,
+    top: "15%",
     right: 0,
     padding: 3,
   },
@@ -125,11 +78,27 @@ const styles = StyleSheet.create({
     fontFamily: "arlrdbd",
     fontSize: lHorizontalScale(11),
   },
-  scrollView: {},
+  scrollView: {
+    paddingHorizontal: "10%",
+    paddingVertical: "20%",
+  },
   descriptionText: {
     color: colors.deepGray,
     fontSize: lHorizontalScale(14),
     lineHeight: lHorizontalScale(24),
     fontFamily: "serifLight",
+  },
+  shadowStyle: {
+    height: "80%",
+    borderTopRightRadius: Screen.screenWidth * 0.1,
+    borderBottomLeftRadius: Screen.screenWidth * 0.05,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });

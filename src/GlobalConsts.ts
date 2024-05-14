@@ -31,6 +31,9 @@ export const colors = {
   green: "#7CA4AB",
   blue: "#00a0e3",
   lightGray: "#F2F2F2",
+  antiqueBronze: "#8B4000",
+  rust: "#B7410E",
+  copper: "#AD6F69",
   gray: "#D3D3D3",
   deepGray: "#666666",
   black: "#000",
@@ -38,7 +41,4 @@ export const colors = {
 };
 
 export const errorLoadingMovieList = "Something went wrong";
-export const editBtnAlertMessage = "It will edit the existing task. ";
-export const urgentBtnAlertMessage =
-  'It will toggle the "urgent" status of the task.';
-export const taskDeletedAlertMessage = "Task deleted!";
+export const errorFindingMovies = "No movies to show";

@@ -1,10 +1,11 @@
-# ToDo App
+# Get Movies Info
 
 A simple app for viewing movie info
 
 ## Install notes
 
 Install with `yarn` or `npm install`
+
 Run with `npx expo start`
 
 ## Technical features

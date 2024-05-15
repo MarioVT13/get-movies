@@ -45,11 +45,12 @@ export default function BackHeader(props: Props) {
 const styles = StyleSheet.create({
   parentContainer: {
     width: "100%",
-    height: "12%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: colors.antiqueBronze,
+    backgroundColor: colors.semiTransparentLight,
+    position: "absolute",
+    top: 0,
   },
   backBtnContainer: {
     height: "100%",

@@ -37,7 +37,8 @@ export const colors = {
   gray: "#D3D3D3",
   deepGray: "#666666",
   black: "#000",
-  semiTransparent: "rgba(0,0,0,0.3)",
+  semiTransparentLight: "rgba(0,0,0,0.3)",
+  semiTransparentDark: "rgba(0,0,0,0.7)",
 };
 
 export const customFonts = {

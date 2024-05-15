@@ -34,7 +34,15 @@ import BounceButton from "../components/BounceButton";
 
 export default function DetailsScreen() {
   const navParams: Partial<object> | any = useRoute().params;
-  const { id, title, overview, vote_average, release_date } = navParams?.data;
+  const {
+    id,
+    title,
+    overview,
+    vote_average,
+    release_date,
+    poster_path,
+    backdrop_path,
+  } = navParams?.data;
 
   const { movDetails, isLoading, error } = useMovieDetails({ id });
   const tagline = movDetails ? movDetails.tagline : "";
@@ -42,6 +50,12 @@ export default function DetailsScreen() {
     typeof overview === "string" && overview?.length > 0
       ? overview
       : errorMovieDetails;
+  const imageUri =
+    typeof poster_path === "string" && poster_path.length > 0
+      ? poster_path
+      : backdrop_path === "string" && backdrop_path.length > 0
+      ? backdrop_path
+      : null;
 
   const dateTime = dayjs(release_date).format("MMM-DD-YYYY");
 
@@ -68,11 +82,15 @@ export default function DetailsScreen() {
       style={styles.parentContainer}
     >
       <Animated.View
-        style={styles.shadowStyle}
+        style={styles.contentContainer}
         entering={ZoomIn.duration(400).mass(2).damping(20).delay(100)}
       >
-        <View style={styles.contentContainer}>
-          <BackHeader title={title} rating={vote_average} style={{}} />
+        <ImageBackground
+          source={{ uri: `https://image.tmdb.org/t/p/original${imageUri}` }}
+          style={styles.ImageBackgroundContainer}
+          resizeMode="cover"
+        >
+          <View style={styles.overlay} />
           <Animated.ScrollView
             contentContainerStyle={styles.scrollView}
             showsVerticalScrollIndicator={false}
@@ -89,6 +107,11 @@ export default function DetailsScreen() {
             <View style={styles.thematicBreak} />
             <Text style={styles.descriptionText}>{description}</Text>
           </Animated.ScrollView>
+          <BackHeader
+            title={title}
+            rating={vote_average}
+            style={{ height: "12%" }}
+          />
           <Animated.View
             style={styles.dateTextContainer}
             entering={SlideInRight.duration(700)
@@ -100,14 +123,10 @@ export default function DetailsScreen() {
             <Text style={[styles.dateText]}>{dateTime}</Text>
           </Animated.View>
           <BounceButton />
-        </View>
+        </ImageBackground>
       </Animated.View>
     </ImageBackground>
   );
-
-  function btnAlert() {
-    Alert.alert(helloMessage);
-  }
 }
 
 const styles = StyleSheet.create({
@@ -118,13 +137,28 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     width: "90%",
-    height: "100%",
-    backgroundColor: colors.white,
+    height: "80%",
     alignItems: "center",
     justifyContent: "center",
     borderTopRightRadius: Screen.screenWidth * 0.1,
     borderBottomLeftRadius: Screen.screenWidth * 0.05,
     overflow: "hidden",
+    borderColor: colors.lightGray,
+    borderWidth: 0.5,
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: "100%",
+    backgroundColor: colors.semiTransparentDark,
+  },
+  ImageBackgroundContainer: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
   },
   errorText: {
     color: colors.purple,
@@ -133,7 +167,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   dateTextContainer: {
-    backgroundColor: colors.semiTransparent,
+    backgroundColor: colors.semiTransparentDark,
     position: "absolute",
     top: "15%",
     right: 0,
@@ -145,10 +179,11 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     paddingHorizontal: "8%",
-    paddingVertical: "20%",
+    paddingTop: "40%",
+    paddingBottom: "10%",
   },
   descriptionText: {
-    color: colors.deepGray,
+    color: colors.white,
     fontSize: lHorizontalScale(15),
     lineHeight: lHorizontalScale(24),
     fontFamily: customFonts.lato,
@@ -160,7 +195,7 @@ const styles = StyleSheet.create({
     marginBottom: "5%",
   },
   shadowStyle: {
-    height: "85%",
+    height: "70%",
     borderTopRightRadius: Screen.screenWidth * 0.1,
     borderBottomLeftRadius: Screen.screenWidth * 0.05,
     shadowColor: colors.black,

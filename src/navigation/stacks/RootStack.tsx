@@ -10,7 +10,7 @@ import { MovieItemDataType } from "../../types/DataTypes";
 
 export type RootStackParamList = {
   Home: { data: MovieItemDataType } | undefined;
-  Details: { data: MovieItemDataType | null };
+  Details: { data: MovieItemDataType | undefined };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

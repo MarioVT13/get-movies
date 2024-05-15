@@ -9,7 +9,8 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "skipLibCheck": true
   },
   "exclude": ["node_modules"],
   "extends": "expo/tsconfig.base"

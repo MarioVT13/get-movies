@@ -1,30 +1,39 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   ActivityIndicator,
   ImageBackground,
-  Platform,
   StyleSheet,
   Text,
   View,
+  RefreshControl,
+  FlatList,
 } from "react-native";
-import Screen, {
-  colors,
-  errorFindingMovies,
-  errorLoadingMovieList,
-  lHorizontalScale,
-} from "../GlobalConsts";
 import MovieListItem from "../components/MovieListItem";
 import usePopularMovies from "../hooks/usePopularMovies";
 import { MovieItemDataType } from "../types/DataTypes";
-import { FlatList } from "react-native-gesture-handler";
+import {
+  colors,
+  errorFindingMovies,
+  errorLoadingMovieList,
+} from "../GlobalConsts";
 
 export default function HomeScreen() {
-  const { movies, isLoading, error } = usePopularMovies();
+  const { movies, isLoading, error, refreshMovies } = usePopularMovies();
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  const isIOS = Platform.OS == "ios";
-  const parentAnim = useRef<any>(null);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refreshMovies()
+      .then(() => {
+        setRefreshing(false); // Reset refreshing state once data is fetched
+      })
+      .catch(() => {
+        setRefreshing(false); // Ensure to reset refreshing even if there's an error
+      });
+  }, [refreshMovies]);
 
-  if (isLoading) {
+  if (isLoading && !refreshing) {
+    // Show ActivityIndicator only on initial load, not on refresh
     return (
       <View style={styles.parentContainer}>
         <ActivityIndicator color={colors.rust} size="large" />
@@ -32,7 +41,7 @@ export default function HomeScreen() {
     );
   }
 
-  if (error || movies?.length == 0) {
+  if (error || movies?.length === 0) {
     return (
       <View style={styles.parentContainer}>
         <Text style={styles.errorText}>{errorLoadingMovieList}:</Text>
@@ -48,14 +57,21 @@ export default function HomeScreen() {
     >
       <FlatList
         data={movies}
-        keyExtractor={(item: MovieItemDataType) => item?.id.toString()}
-        renderItem={({ item, index }) => {
-          return <MovieListItem item={item} index={index} />;
-        }}
+        keyExtractor={(item: MovieItemDataType) => item.id.toString()}
+        renderItem={({ item, index }) => (
+          <MovieListItem item={item} index={index} />
+        )}
         initialNumToRender={10}
         showsVerticalScrollIndicator={false}
-        numColumns={2} // this sets 2 items per row
+        numColumns={2}
         contentContainerStyle={styles.flatListContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.rust} // custom color for the refresh indicator
+          />
+        }
       />
     </ImageBackground>
   );
@@ -73,35 +89,8 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.purple,
-    fontSize: lHorizontalScale(18),
+    fontSize: 16,
     paddingHorizontal: "10%",
     textAlign: "center",
-  },
-
-  listContainer: {
-    width: "90%",
-    height: "90%",
-    borderTopLeftRadius: Screen.screenWidth * 0.25,
-    // overflow: "hidden",
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 4,
-  },
-  titleContainer: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: colors.purple,
-    justifyContent: "flex-end",
-  },
-  contentContainer: {
-    width: "100%",
-    height: "90%",
-    borderTopLeftRadius: Screen.screenWidth * 0.25,
-    backgroundColor: colors.white,
   },
 });

@@ -18,7 +18,7 @@ export default function BounceButton() {
 
   useEffect(() => {
     // Initial delay handled here
-    const initialDelay = 5 * 1000; // 500 ms initial delay
+    const initialDelay = 8 * 1000;
     setTimeout(() => {
       setContentVisible(true); // Show the content when the animation starts
       animationTrigger.value = withRepeat(

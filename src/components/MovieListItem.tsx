@@ -11,10 +11,10 @@ import {
 import Animated, { BounceIn, StretchInX } from "react-native-reanimated";
 import { colors, customFonts, lVerticalScale } from "../GlobalConsts";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
-import { MoviesDataType } from "../types/DataTypes";
+import { MovieItemDataType } from "../types/DataTypes";
 
 interface MovieItem {
-  item: MoviesDataType;
+  item: MovieItemDataType;
   index: number;
 }
 

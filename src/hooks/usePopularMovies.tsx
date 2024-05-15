@@ -31,10 +31,6 @@ const usePopularMovies = () => {
     fetchPopularMovies();
   }, []);
 
-  console.log("MOVIES: ", movies);
-  //   console.log("isLoading: ", isLoading);
-  //   console.log("ERROR: ", error);
-
   return { movies, isLoading, error };
 };
 

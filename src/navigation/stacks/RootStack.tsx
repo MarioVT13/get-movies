@@ -6,11 +6,11 @@ import {
 } from "@react-navigation/stack";
 import HomeScreen from "../../screens/HomeScreen";
 import DetailsScreen from "../../screens/DetailsScreen";
-import { MoviesDataType } from "../../types/DataTypes";
+import { MovieItemDataType } from "../../types/DataTypes";
 
 export type RootStackParamList = {
-  Home: { data: MoviesDataType } | undefined;
-  Details: { data: MoviesDataType | null };
+  Home: { data: MovieItemDataType } | undefined;
+  Details: { data: MovieItemDataType | null };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

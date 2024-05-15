@@ -1,17 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Icon as ElementIcon } from "react-native-elements";
-import Icon from "react-native-vector-icons/Feather";
-import { customFonts, lHorizontalScale, lVerticalScale } from "../GlobalConsts";
-import { colors } from "../GlobalConsts";
+import Animated, { StretchInY } from "react-native-reanimated";
+import { colors, customFonts, lHorizontalScale } from "../GlobalConsts";
 import RatingComponent from "./RatingComponent";
 
 interface Props {
@@ -37,17 +29,17 @@ export default function BackHeader(props: Props) {
           style={{}}
         />
       </TouchableOpacity>
-      <Text style={styles.titleText}>{title.toUpperCase()}</Text>
+      <Animated.Text
+        entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
+        style={styles.titleText}
+      >
+        {title.toUpperCase()}
+      </Animated.Text>
       <View style={styles.ratingComponentContainer}>
         <RatingComponent rating={rating} />
       </View>
     </View>
   );
-
-  // function btnAlert(isEditBtn: boolean) {
-  //   if (isEditBtn) Alert.alert(editBtnAlertMessage);
-  //   else Alert.alert(urgentBtnAlertMessage);
-  // }
 }
 
 const styles = StyleSheet.create({

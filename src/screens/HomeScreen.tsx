@@ -15,7 +15,7 @@ import Screen, {
 } from "../GlobalConsts";
 import MovieListItem from "../components/MovieListItem";
 import usePopularMovies from "../hooks/usePopularMovies";
-import { MoviesDataType } from "../types/DataTypes";
+import { MovieItemDataType } from "../types/DataTypes";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function HomeScreen() {
@@ -27,7 +27,7 @@ export default function HomeScreen() {
   if (isLoading) {
     return (
       <View style={styles.parentContainer}>
-        <ActivityIndicator color={colors.white} size="large" />
+        <ActivityIndicator color={colors.rust} size="large" />
       </View>
     );
   }
@@ -48,7 +48,7 @@ export default function HomeScreen() {
     >
       <FlatList
         data={movies}
-        keyExtractor={(item: MoviesDataType) => item.id.toString()}
+        keyExtractor={(item: MovieItemDataType) => item?.id.toString()}
         renderItem={({ item, index }) => {
           return <MovieListItem item={item} index={index} />;
         }}

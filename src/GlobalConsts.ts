@@ -43,8 +43,11 @@ export const colors = {
 export const customFonts = {
   anton: "Anton_400Regular",
   bangers: "Bangers_400Regular",
-  latoBoldItalic: "Lato_700Bold_Italic",
+  lato: "Lato_400Regular",
+  latoBlack: "Lato_900Black",
 };
 
 export const errorLoadingMovieList = "Something went wrong";
 export const errorFindingMovies = "No movies to show";
+export const errorMovieDetails = "No info available";
+export const helloMessage = "I hope you like my app :)";

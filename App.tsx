@@ -8,13 +8,14 @@ import { Bangers_400Regular, useFonts } from "@expo-google-fonts/bangers";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { colors } from "./src/GlobalConsts";
 import { Anton_400Regular } from "@expo-google-fonts/anton";
-import { Lato_700Bold_Italic } from "@expo-google-fonts/lato";
+import { Lato_400Regular, Lato_900Black } from "@expo-google-fonts/lato";
 
 function App() {
   const [fontsLoaded] = useFonts({
     Anton_400Regular,
     Bangers_400Regular,
-    Lato_700Bold_Italic,
+    Lato_400Regular,
+    Lato_900Black,
   });
 
   useEffect(() => {

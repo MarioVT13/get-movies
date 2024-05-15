@@ -1,10 +1,14 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { colors, customFonts, lHorizontalScale } from "../GlobalConsts";
+import Animated, { PinwheelIn } from "react-native-reanimated";
 
 const RatingComponent = ({ rating }: { rating: number }) => {
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={styles.container}
+      entering={PinwheelIn.duration(500).mass(2).damping(20).delay(400)}
+    >
       <View style={styles.star}>
         <View style={[styles.line, styles.line1]} />
         <View style={[styles.line, styles.line2]} />
@@ -13,7 +17,7 @@ const RatingComponent = ({ rating }: { rating: number }) => {
         <View style={[styles.line, styles.line5]} />
       </View>
       <Text style={styles.rating}>{rating.toFixed(1)}</Text>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -85,8 +89,9 @@ const styles = StyleSheet.create({
 
   rating: {
     fontSize: lHorizontalScale(14),
-    color: colors.deepGray,
+    color: colors.antiqueBronze,
     position: "absolute",
     fontFamily: customFonts.anton,
+    transform: [{ rotate: "10deg" }],
   },
 });

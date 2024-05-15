@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Animated, { BounceIn, StretchInX } from "react-native-reanimated";
-import { colors, lVerticalScale } from "../GlobalConsts";
+import { colors, customFonts, lVerticalScale } from "../GlobalConsts";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import { MoviesDataType } from "../types/DataTypes";
 
@@ -66,7 +66,9 @@ export default function MovieListItem(props: MovieItem) {
               />
             )}
           </ImageBackground>
-          <Text style={styles.title}>{title ?? "Unknown title"}</Text>
+          <Text style={styles.title}>
+            {title?.toUpperCase() ?? "Unknown title"}
+          </Text>
         </TouchableOpacity>
       </Animated.View>
     );
@@ -100,6 +102,7 @@ const styles = StyleSheet.create({
     color: colors.lightGray,
     textAlign: "center",
     height: "auto",
+    fontFamily: customFonts.anton,
   },
   indicator: {
     alignSelf: "center",

@@ -4,26 +4,47 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import RootStack from "./src/navigation/stacks/RootStack";
+import { Bangers_400Regular, useFonts } from "@expo-google-fonts/bangers";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { colors } from "./src/GlobalConsts";
+import { Anton_400Regular } from "@expo-google-fonts/anton";
+import { Lato_700Bold_Italic } from "@expo-google-fonts/lato";
 
 function App() {
+  const [fontsLoaded] = useFonts({
+    Anton_400Regular,
+    Bangers_400Regular,
+    Lato_700Bold_Italic,
+  });
+
   useEffect(() => {
     async function prepare() {
       try {
-        // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
-
-        // Artificially delay for 2 seconds.
-        await new Promise((resolve) => setTimeout(resolve, 1 * 1000));
+        // If you need to do more asynchronous tasks, place them here before hiding the splash screen.
       } catch (e) {
-        console.warn(e);
+        console.warn("Failed to load resources", e);
       } finally {
-        // Hide the splash screen
-        await SplashScreen.hideAsync();
+        if (fontsLoaded) {
+          await SplashScreen.hideAsync();
+        }
       }
     }
 
-    prepare();
-  }, []);
+    if (fontsLoaded) {
+      prepare();
+    }
+  }, [fontsLoaded]); // Include fontsLoaded as a dependency
+
+  if (!fontsLoaded) {
+    return (
+      <ActivityIndicator
+        color={colors.rust}
+        style={styles.indicator}
+        size="large"
+      />
+    ); // Render a loading indicator while fonts are loading
+  }
 
   return (
     <NavigationContainer>
@@ -34,3 +55,11 @@ function App() {
 }
 
 export default gestureHandlerRootHOC(App);
+
+const styles = StyleSheet.create({
+  indicator: {
+    alignSelf: "center",
+    position: "absolute",
+    top: "50%",
+  },
+});

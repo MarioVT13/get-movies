@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { colors, lHorizontalScale } from "../GlobalConsts";
+import { colors, customFonts, lHorizontalScale } from "../GlobalConsts";
 
 const RatingComponent = ({ rating }: { rating: number }) => {
   return (
@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
     fontSize: lHorizontalScale(14),
     color: colors.deepGray,
     position: "absolute",
-    fontWeight: "bold",
+    fontFamily: customFonts.anton,
   },
 });

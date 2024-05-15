@@ -25,6 +25,9 @@
     },
     "androidNavigationBar": {
       "visible": "immersive"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

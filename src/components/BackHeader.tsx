@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Icon as ElementIcon } from "react-native-elements";
 import Icon from "react-native-vector-icons/Feather";
-import { lHorizontalScale, lVerticalScale } from "../GlobalConsts";
+import { customFonts, lHorizontalScale, lVerticalScale } from "../GlobalConsts";
 import { colors } from "../GlobalConsts";
 import RatingComponent from "./RatingComponent";
 
@@ -67,10 +67,9 @@ const styles = StyleSheet.create({
   titleText: {
     width: "60%",
     color: colors.white,
-    fontSize: lHorizontalScale(18),
-    fontFamily: "serifLight",
+    fontSize: lHorizontalScale(22),
     textAlign: "center",
-    fontWeight: "bold",
+    fontFamily: customFonts.bangers,
   },
   ratingComponentContainer: {
     width: "20%",

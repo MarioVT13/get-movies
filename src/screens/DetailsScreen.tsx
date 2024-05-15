@@ -10,15 +10,14 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Animated, { ZoomIn } from "react-native-reanimated";
-import Screen, { colors, lHorizontalScale } from "../GlobalConsts";
+import Screen, { colors, customFonts, lHorizontalScale } from "../GlobalConsts";
 import BackHeader from "../components/BackHeader";
+import { fonts } from "react-native-elements/dist/config";
 
 export default function DetailsScreen() {
   const navParams: Partial<object> | any = useRoute().params;
   const { id, original_language, title, overview, vote_average, release_date } =
     navParams?.data;
-
-  console.log("NAV_PARAMS: ", navParams);
 
   const dateTime = dayjs(release_date).format("MMM-DD-YYYY");
   const isIOS = Platform.OS == "ios";
@@ -75,7 +74,6 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: colors.white,
-    fontFamily: "arlrdbd",
     fontSize: lHorizontalScale(11),
   },
   scrollView: {
@@ -84,9 +82,9 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     color: colors.deepGray,
-    fontSize: lHorizontalScale(14),
+    fontSize: lHorizontalScale(16),
     lineHeight: lHorizontalScale(24),
-    fontFamily: "serifLight",
+    fontFamily: customFonts.latoBoldItalic,
   },
   shadowStyle: {
     height: "85%",

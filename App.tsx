@@ -22,9 +22,9 @@ function App() {
     async function prepare() {
       try {
         await SplashScreen.preventAutoHideAsync();
-        // If you need to do more asynchronous tasks, place them here before hiding the splash screen.
+        // We can put here more async tasks (if needed), before hiding the splash screen.
       } catch (e) {
-        console.warn("Failed to load resources", e);
+        console.warn("Failed to load resources: ", e);
       } finally {
         if (fontsLoaded) {
           await SplashScreen.hideAsync();
@@ -35,7 +35,7 @@ function App() {
     if (fontsLoaded) {
       prepare();
     }
-  }, [fontsLoaded]); // Include fontsLoaded as a dependency
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return (

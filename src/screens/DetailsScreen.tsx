@@ -3,18 +3,12 @@ import dayjs from "dayjs";
 import React from "react";
 import {
   ActivityIndicator,
-  Alert,
-  Button,
   ImageBackground,
-  Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import Animated, {
-  BounceIn,
   FadeInDown,
   SlideInRight,
   ZoomIn,
@@ -24,13 +18,11 @@ import Screen, {
   customFonts,
   errorLoadingMovieList,
   errorMovieDetails,
-  helloMessage,
   lHorizontalScale,
 } from "../GlobalConsts";
 import BackHeader from "../components/BackHeader";
-import useMovieDetails from "../hooks/useMovieDetails";
-import Icon from "react-native-vector-icons/Ionicons";
 import BounceButton from "../components/BounceButton";
+import useMovieDetails from "../hooks/useMovieDetails";
 
 export default function DetailsScreen() {
   const navParams: Partial<object> | any = useRoute().params;
@@ -193,18 +185,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
     width: "100%",
     marginBottom: "5%",
-  },
-  shadowStyle: {
-    height: "70%",
-    borderTopRightRadius: Screen.screenWidth * 0.1,
-    borderBottomLeftRadius: Screen.screenWidth * 0.05,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 4,
   },
 });

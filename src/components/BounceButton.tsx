@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -8,10 +8,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { colors, helloMessage } from "../GlobalConsts";
 import Icon from "react-native-vector-icons/Ionicons";
+import { Context } from "../Context";
 
 export default function BounceButton() {
+  const { helloMessageSeen, setHelloMessageSeen } = useContext(Context);
   const animationTrigger = useSharedValue(0.7); // Start at a reduced scale
-  const [contentVisible, setContentVisible] = useState(false); // State to control content visibility
+  const [contentVisible, setContentVisible] = useState(false); // State to control visibility
   const timeoutRef = useRef(null);
 
   useEffect(() => {
@@ -45,6 +47,8 @@ export default function BounceButton() {
     };
   });
 
+  if (helloMessageSeen) return;
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.helloBtn, animatedStyle]}>
@@ -62,6 +66,7 @@ export default function BounceButton() {
 
   function btnAlert() {
     Alert.alert(helloMessage);
+    setHelloMessageSeen(true);
   }
 }
 

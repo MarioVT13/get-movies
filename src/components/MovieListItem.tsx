@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import Animated, { BounceIn, StretchInX } from "react-native-reanimated";
+import Animated, { StretchInX } from "react-native-reanimated";
 import { colors, customFonts, lVerticalScale } from "../GlobalConsts";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import { MovieItemDataType } from "../types/DataTypes";

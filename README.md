@@ -17,5 +17,6 @@ Run with `npx expo start`
 - "Pull to refresh" dynamic list functionality
 - Handling of timestamps with "dayjs"
 - Multiple animations added
+- Detailed error and loading handling
 
   ...

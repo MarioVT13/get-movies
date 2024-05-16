@@ -6,13 +6,5 @@ export type MovieItemDataType = {
   backdrop_path: string;
   vote_average: number;
   release_date: string;
-};
-
-export type MovieItemDetailsDataType = {
-  title: string;
-  overview: string;
-  backdrop_path: string;
-  vote_average: number;
-  release_date: string;
-  tagline: string;
+  tagline?: string;
 };

@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { MovieItemDetailsDataType } from "../types/DataTypes";
+import { MovieItemDataType } from "../types/DataTypes";
 
 const useMovieDetails = ({ id }: { id: number }) => {
   const apiKey = process.env.EXPO_TMBD_API_KEY;
 
-  const [movDetails, setMovDetails] = useState<MovieItemDetailsDataType | null>(
-    null
-  );
+  const [movDetails, setMovDetails] = useState<MovieItemDataType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 

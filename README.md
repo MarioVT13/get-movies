@@ -14,6 +14,8 @@ Run with `npx expo start`
 - State management with React Context
 - Custom hooks for API calls
 - Custom Fonts (loaded on splash screen)
+- "Pull to refresh" dynamic list functionality
 - Handling of timestamps with "dayjs"
 - Multiple animations added
+
   ...

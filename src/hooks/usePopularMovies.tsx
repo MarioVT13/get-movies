@@ -18,7 +18,7 @@ const usePopularMovies = () => {
           },
         }
       );
-      setMovies(response.data.results);
+      setMovies(response.data?.results);
       setError(null); // Clear any errors on successful fetch
     } catch (err: any) {
       setError(err?.response?.data?.message ?? "Unknown error occurred");

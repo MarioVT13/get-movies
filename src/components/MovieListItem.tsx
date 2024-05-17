@@ -9,7 +9,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Animated, { StretchInX } from "react-native-reanimated";
-import { colors, customFonts, lVerticalScale } from "../GlobalConsts";
+import {
+  colors,
+  customFonts,
+  errorMovieTitle,
+  lVerticalScale,
+} from "../GlobalConsts";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import { MovieItemDataType } from "../types/DataTypes";
 
@@ -25,7 +30,7 @@ export default function MovieListItem(props: MovieItem) {
   const imageUri =
     typeof poster_path === "string" && poster_path.length > 0
       ? poster_path
-      : backdrop_path === "string" && backdrop_path.length > 0
+      : typeof backdrop_path === "string" && backdrop_path.length > 0
       ? backdrop_path
       : null;
   const isIOS = Platform.OS == "ios";
@@ -38,11 +43,15 @@ export default function MovieListItem(props: MovieItem) {
           isIOS ? {} : styles.shadowStyle,
           { marginRight: index % 2 == 0 ? "4%" : 0 },
         ]}
-        entering={StretchInX.duration(800)
-          .springify()
-          .mass(1)
-          .damping(40)
-          .delay((index + 1) * 250)}
+        entering={
+          index <= 10
+            ? StretchInX.duration(800)
+                .springify()
+                .mass(1)
+                .damping(40)
+                .delay((index + 1) * 250)
+            : undefined
+        }
       >
         <TouchableOpacity
           style={[{ width: "100%" }]}
@@ -67,7 +76,7 @@ export default function MovieListItem(props: MovieItem) {
             )}
           </ImageBackground>
           <Text style={styles.title}>
-            {title?.toUpperCase() ?? "Unknown title"}
+            {title?.toUpperCase() ?? errorMovieTitle}
           </Text>
         </TouchableOpacity>
       </Animated.View>

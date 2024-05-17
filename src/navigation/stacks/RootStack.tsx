@@ -10,7 +10,7 @@ import { MovieItemDataType } from "../../types/DataTypes";
 import { ContextProvider } from "../../Context";
 
 export type RootStackParamList = {
-  Home: { data: MovieItemDataType } | undefined;
+  Home: undefined;
   Details: { data: MovieItemDataType | undefined };
 };
 

@@ -51,4 +51,5 @@ export const customFonts = {
 export const errorLoadingMovieList = "Something went wrong";
 export const errorFindingMovies = "No movies to show";
 export const errorMovieDetails = "No info available";
+export const errorMovieTitle = "Unknown title";
 export const helloMessage = "I hope you like my app :)";

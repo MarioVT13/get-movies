@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useMemo } from "react";
 import {
-  ActivityIndicator,
+  Image,
   ImageBackground,
   Platform,
   StyleSheet,
@@ -44,7 +44,7 @@ export default function MovieListItem(props: MovieItem) {
           { marginRight: index % 2 == 0 ? "4%" : 0 },
         ]}
         entering={
-          index <= 10
+          index <= 11
             ? StretchInX.duration(800)
                 .springify()
                 .mass(1)
@@ -58,22 +58,19 @@ export default function MovieListItem(props: MovieItem) {
           onPress={() => navigate("Details", { data: item })}
         >
           <ImageBackground
-            source={
-              imageUri
-                ? {
-                    uri: `https://image.tmdb.org/t/p/original${imageUri}`,
-                  }
-                : require("../../assets/missing-poster.jpg")
-            }
+            source={require("../../assets/missing-poster.jpg")}
             style={styles.image}
           >
-            {!imageUri && (
-              <ActivityIndicator
-                color={colors.rust}
-                style={styles.indicator}
-                size="large"
-              />
-            )}
+            <Image
+              source={
+                imageUri
+                  ? {
+                      uri: `https://image.tmdb.org/t/p/original${imageUri}`,
+                    }
+                  : require("../../assets/missing-poster.jpg")
+              }
+              style={styles.image}
+            />
           </ImageBackground>
           <Text style={styles.title}>
             {title?.toUpperCase() ?? errorMovieTitle}
@@ -102,7 +99,6 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: lVerticalScale(170),
-    backgroundColor: colors.yellow,
   },
   title: {
     marginVertical: 5,

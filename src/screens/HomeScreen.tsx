@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import {
   ActivityIndicator,
   ImageBackground,
@@ -11,44 +11,45 @@ import {
 import MovieListItem from "../components/MovieListItem";
 import usePopularMovies from "../hooks/usePopularMovies";
 import { MovieItemDataType } from "../types/DataTypes";
-import {
-  colors,
-  errorFindingMovies,
-  errorLoadingMovieList,
-} from "../GlobalConsts";
+import { colors, errorLoadingMovieList } from "../GlobalConsts";
 
 export default function HomeScreen() {
   const { movies, isLoading, error, refreshMovies } = usePopularMovies();
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     refreshMovies()
       .then(() => {
-        setRefreshing(false); // Reset refreshing state once data is fetched
+        setRefreshing(false);
       })
       .catch(() => {
-        setRefreshing(false); // Ensure to reset refreshing even if there's an error
+        setRefreshing(false);
       });
   }, [refreshMovies]);
 
-  if (isLoading && !refreshing) {
-    // Show ActivityIndicator only on initial load, not on refresh
-    return (
-      <View style={styles.parentContainer}>
-        <ActivityIndicator color={colors.rust} size="large" />
-      </View>
-    );
-  }
+  const renderItem = useCallback(
+    ({ item, index }: { item: MovieItemDataType; index: number }) => (
+      <MovieListItem item={item} index={index} />
+    ),
+    []
+  );
 
-  if (error || movies?.length === 0) {
+  const renderFooter = useCallback(() => {
+    if (!isLoading) return null;
+    return <ActivityIndicator color={colors.rust} size="large" />;
+  }, [isLoading]);
+
+  const errorMessage = useMemo(() => {
     return (
       <View style={styles.parentContainer}>
         <Text style={styles.errorText}>{errorLoadingMovieList}:</Text>
-        <Text style={styles.errorText}>{error ?? errorFindingMovies}</Text>
+        <Text style={styles.errorText}>{error}</Text>
       </View>
     );
-  }
+  }, [error]);
+
+  if (error) return errorMessage;
 
   return (
     <ImageBackground
@@ -57,10 +58,10 @@ export default function HomeScreen() {
     >
       <FlatList
         data={movies}
-        keyExtractor={(item: MovieItemDataType) => item.id.toString()}
-        renderItem={({ item, index }) => (
-          <MovieListItem item={item} index={index} />
-        )}
+        keyExtractor={(item: MovieItemDataType, index: number) =>
+          `${item.id}_${index}`
+        }
+        renderItem={({ item, index }) => renderItem({ item, index })}
         initialNumToRender={10}
         showsVerticalScrollIndicator={false}
         numColumns={2}
@@ -69,9 +70,12 @@ export default function HomeScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={colors.rust} // custom color for the refresh indicator
+            tintColor={colors.rust}
           />
         }
+        onEndReached={refreshMovies}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
       />
     </ImageBackground>
   );

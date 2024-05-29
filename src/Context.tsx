@@ -13,15 +13,18 @@ const contextWrapper = (component?: React.Component) => ({
   },
 });
 
-type Context = ReturnType<typeof contextWrapper>;
+type ContextType = ReturnType<typeof contextWrapper>;
 
-export const Context = React.createContext<Context>(contextWrapper());
+export const Context = React.createContext<ContextType>(contextWrapper());
 
 interface State {
-  context: Context;
+  context: ContextType;
+}
+interface ContextProviderProps {
+  children?: React.ReactNode;
 }
 
-export class ContextProvider extends React.Component<{ state: State } | any> {
+export class ContextProvider extends React.Component<ContextProviderProps> {
   state: State = {
     context: contextWrapper(this),
   };
@@ -29,7 +32,7 @@ export class ContextProvider extends React.Component<{ state: State } | any> {
   render() {
     return (
       <Context.Provider value={this.state.context}>
-        {this.props.children}
+        {this.props?.children}
       </Context.Provider>
     );
   }

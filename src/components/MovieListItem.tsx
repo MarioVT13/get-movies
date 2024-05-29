@@ -23,12 +23,9 @@ export default function MovieListItem(props: MovieItem) {
   const { item, index } = props;
   const { title, poster_path, backdrop_path } = item;
   const { navigate } = useNavigation<RootStackNavigationProp>();
-  const imageUri =
-    typeof poster_path === "string" && poster_path.length > 0
-      ? poster_path
-      : typeof backdrop_path === "string" && backdrop_path.length > 0
-      ? backdrop_path
-      : null;
+
+  const middleSpaceBetweenItems = index % 2 == 0 ? "4%" : 0;
+  const imageUri = poster_path ?? backdrop_path ?? null;
   const isIOS = Platform.OS == "ios";
 
   const listItem = useMemo(() => {
@@ -37,7 +34,7 @@ export default function MovieListItem(props: MovieItem) {
         style={[
           styles.parentContainer,
           isIOS ? {} : styles.shadowStyle,
-          { marginRight: index % 2 == 0 ? "4%" : 0 },
+          { marginRight: middleSpaceBetweenItems },
         ]}
         entering={
           index <= 11

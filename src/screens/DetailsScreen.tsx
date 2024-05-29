@@ -23,9 +23,11 @@ import Screen, { horizontalScale } from "../utils/ScalingUtil";
 import BackHeader from "../components/BackHeader";
 import BounceButton from "../components/BounceButton";
 import useMovieDetails from "../hooks/useMovieDetails";
+import { MovieItemDataType } from "../types/DataTypes";
 
 export default function DetailsScreen() {
-  const navParams: Partial<object> | any = useRoute().params;
+  const { params } = useRoute();
+  const navParams = params as { data: MovieItemDataType };
   const {
     id,
     title,
@@ -37,17 +39,9 @@ export default function DetailsScreen() {
   } = navParams?.data;
 
   const { movDetails, isLoading, error } = useMovieDetails({ id });
-  const tagline = movDetails ? movDetails.tagline : "";
-  const description =
-    typeof overview === "string" && overview?.length > 0
-      ? overview
-      : errorMovieDetails;
-  const imageUri =
-    typeof poster_path === "string" && poster_path.length > 0
-      ? poster_path
-      : backdrop_path === "string" && backdrop_path.length > 0
-      ? backdrop_path
-      : null;
+  const tagline = movDetails?.tagline ?? "";
+  const description = (overview?.length && overview) || errorMovieDetails;
+  const imageUri = poster_path ?? backdrop_path ?? null;
 
   const dateTime = dayjs(release_date).format("MMM-DD-YYYY");
 

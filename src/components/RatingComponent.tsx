@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { colors, customFonts, lHorizontalScale } from "../GlobalConsts";
+import { colors, customFonts } from "../GlobalConsts";
+import { horizontalScale } from "../utils/ScalingUtil";
 import Animated, { PinwheelIn } from "react-native-reanimated";
 
 const RatingComponent = ({ rating }: { rating: number }) => {
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   },
 
   rating: {
-    fontSize: lHorizontalScale(14),
+    fontSize: horizontalScale(14),
     color: colors.antiqueBronze,
     position: "absolute",
     fontFamily: customFonts.anton,

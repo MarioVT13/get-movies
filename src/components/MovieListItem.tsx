@@ -9,12 +9,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Animated, { StretchInX } from "react-native-reanimated";
-import {
-  colors,
-  customFonts,
-  errorMovieTitle,
-  lVerticalScale,
-} from "../GlobalConsts";
+import { colors, customFonts, errorMovieTitle } from "../GlobalConsts";
+import { verticalScale } from "../utils/ScalingUtil";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import { MovieItemDataType } from "../types/DataTypes";
 
@@ -90,7 +86,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 60,
     borderBottomLeftRadius: 20,
     overflow: "hidden",
-    marginBottom: lVerticalScale(20),
+    marginBottom: verticalScale(20),
     width: "48%", // 48% + 48% + 4% = 100%
     // we need the 4% to add some margin between the 2 items per row
     borderColor: colors.lightGray,
@@ -98,12 +94,12 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: lVerticalScale(170),
+    height: verticalScale(170),
   },
   title: {
     marginVertical: 5,
     marginHorizontal: 10,
-    fontSize: lVerticalScale(12),
+    fontSize: verticalScale(12),
     color: colors.lightGray,
     textAlign: "center",
     height: "auto",

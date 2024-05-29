@@ -3,7 +3,8 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Icon as ElementIcon } from "react-native-elements";
 import Animated, { StretchInY } from "react-native-reanimated";
-import { colors, customFonts, lHorizontalScale } from "../GlobalConsts";
+import { colors, customFonts } from "../GlobalConsts";
+import { horizontalScale } from "../utils/ScalingUtil";
 import RatingComponent from "./RatingComponent";
 
 interface Props {
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   titleText: {
     width: "60%",
     color: colors.white,
-    fontSize: lHorizontalScale(22),
+    fontSize: horizontalScale(22),
     textAlign: "center",
     fontFamily: customFonts.bangers,
   },

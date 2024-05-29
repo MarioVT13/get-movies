@@ -13,13 +13,13 @@ import Animated, {
   SlideInRight,
   ZoomIn,
 } from "react-native-reanimated";
-import Screen, {
+import {
   colors,
   customFonts,
   errorLoadingMovieList,
   errorMovieDetails,
-  lHorizontalScale,
 } from "../GlobalConsts";
+import Screen, { horizontalScale } from "../utils/ScalingUtil";
 import BackHeader from "../components/BackHeader";
 import BounceButton from "../components/BounceButton";
 import useMovieDetails from "../hooks/useMovieDetails";
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.purple,
-    fontSize: lHorizontalScale(18),
+    fontSize: horizontalScale(18),
     paddingHorizontal: "10%",
     textAlign: "center",
   },
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: colors.white,
-    fontSize: lHorizontalScale(11),
+    fontSize: horizontalScale(11),
   },
   scrollView: {
     paddingHorizontal: "8%",
@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     color: colors.white,
-    fontSize: lHorizontalScale(15),
-    lineHeight: lHorizontalScale(24),
+    fontSize: horizontalScale(15),
+    lineHeight: horizontalScale(24),
     fontFamily: customFonts.lato,
   },
   thematicBreak: {

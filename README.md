@@ -1,6 +1,6 @@
 # Get Movies Info
 
-A simple app for viewing movie info
+A simple demo app for viewing movie info. It was developed for about 3 and a half days, using React Native Expo.
 
 ## Install notes
 

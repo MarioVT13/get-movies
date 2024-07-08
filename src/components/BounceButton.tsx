@@ -14,12 +14,12 @@ export default function BounceButton() {
   const { helloMessageSeen, setHelloMessageSeen } = useContext(Context);
   const animationTrigger = useSharedValue(0.7); // Start at a reduced scale
   const [contentVisible, setContentVisible] = useState(false); // State to control visibility
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     // Initial delay handled here
     const initialDelay = 8 * 1000;
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setContentVisible(true); // Show the content when the animation starts
       animationTrigger.value = withRepeat(
         withSpring(1, {
@@ -30,13 +30,11 @@ export default function BounceButton() {
         -1, // Infinite repeats
         true // Reverse the animation on every second iteration
       );
-    }, initialDelay);
+    }, initialDelay) as unknown as number;
 
     // Cleanup function
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 

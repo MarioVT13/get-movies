@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { MovieItemDataType } from "../types/DataTypes";
+import { isValidMovieData } from "../utils/ServiceDataUtil";
 
 const useMovieDetails = ({ id }: { id: number }) => {
   const apiKey = process.env.EXPO_TMBD_API_KEY;
@@ -21,7 +22,10 @@ const useMovieDetails = ({ id }: { id: number }) => {
             },
           }
         );
-        setMovDetails(response.data);
+
+        if (isValidMovieData(response.data)) {
+          setMovDetails(response.data);
+        }
       } catch (err: any) {
         setError(err?.message ?? "Unknown");
       } finally {

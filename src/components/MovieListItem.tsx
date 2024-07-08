@@ -66,7 +66,7 @@ export default function MovieListItem(props: MovieItem) {
             />
           </ImageBackground>
           <Text style={styles.title}>
-            {title?.toUpperCase() ?? errorMovieTitle}
+            {title.length !== 0 ? title?.toUpperCase() : errorMovieTitle}
           </Text>
         </TouchableOpacity>
       </Animated.View>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { MovieItemDataType } from "../types/DataTypes";
+import { isValidMovieData } from "../utils/ServiceDataUtil";
 
 const usePopularMovies = () => {
   const apiKey = process.env.EXPO_TMBD_API_KEY;
@@ -13,7 +14,7 @@ const usePopularMovies = () => {
   const fetchPopularMovies = useCallback(async () => {
     if (!hasMore || isLoading) return; // Prevent duplicate calls
     setIsLoading(true);
-    // console.log(`Fetching page ${page}`); // Debug what page is being fetched
+
     try {
       const response = await axios.get(
         "https://api.themoviedb.org/3/movie/popular",
@@ -24,10 +25,16 @@ const usePopularMovies = () => {
           },
         }
       );
-      const newResults = response.data?.results;
-      setMovies((prevMovies) => [...prevMovies, ...newResults]);
+      let validMovies = response.data?.results;
+      if (Array.isArray(validMovies)) {
+        validMovies = validMovies.filter(isValidMovieData);
+      } else {
+        validMovies = [];
+      }
+      setMovies((prevMovies) => [...prevMovies, ...validMovies]);
       setPage((prevPage) => prevPage + 1);
       setHasMore(response.data.page < response.data.total_pages);
+      // console.log("Get pop movies: ", validMovies);
       // console.log(`Data for page ${page} fetched`); // Debug data fetch
     } catch (err: any) {
       setError(err.response?.data?.message ?? "Unknown error occurred");

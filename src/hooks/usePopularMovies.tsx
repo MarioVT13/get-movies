@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { MovieItemDataType } from "../types/DataTypes";
 import { isValidMovieData } from "../utils/ServiceDataUtil";
+import { API_KEY, BASE_URL } from "../GlobalConsts";
 
 const usePopularMovies = () => {
-  const apiKey = process.env.EXPO_TMBD_API_KEY;
   const [movies, setMovies] = useState<MovieItemDataType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -16,15 +16,12 @@ const usePopularMovies = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.get(
-        "https://api.themoviedb.org/3/movie/popular",
-        {
-          params: {
-            api_key: apiKey,
-            page,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/movie/popular`, {
+        params: {
+          api_key: API_KEY,
+          page,
+        },
+      });
       let validMovies = response.data?.results;
       if (Array.isArray(validMovies)) {
         validMovies = validMovies.filter(isValidMovieData);
@@ -41,7 +38,7 @@ const usePopularMovies = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [apiKey, page, hasMore, isLoading]);
+  }, [API_KEY, page, hasMore, isLoading]);
 
   useEffect(() => {
     fetchPopularMovies();

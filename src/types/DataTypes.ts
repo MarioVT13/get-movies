@@ -1,3 +1,8 @@
+export type Genres = {
+  id: number;
+  name: string;
+};
+
 export type MovieItemDataType = {
   id: number;
   title: string;
@@ -7,4 +12,5 @@ export type MovieItemDataType = {
   vote_average: number;
   release_date: string;
   tagline?: string;
+  genres?: Genres[];
 };

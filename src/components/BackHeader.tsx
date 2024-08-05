@@ -9,13 +9,17 @@ import RatingComponent from "./RatingComponent";
 
 interface Props {
   title: string;
+  genres: string;
   rating: number;
   style: Partial<ViewStyle>;
 }
 
 export default function BackHeader(props: Props) {
-  const { title, rating, style } = props;
+  const { title, genres, rating, style } = props;
   const { goBack } = useNavigation();
+
+  const overSizedTitle = title?.length > 20;
+  const titleTextSize = overSizedTitle ? 18 : 22;
 
   return (
     <View style={[styles.parentContainer, style]}>
@@ -30,12 +34,23 @@ export default function BackHeader(props: Props) {
           style={{}}
         />
       </TouchableOpacity>
-      <Animated.Text
-        entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
-        style={styles.titleText}
-      >
-        {title.toUpperCase()}
-      </Animated.Text>
+      <View style={styles.titleContainer}>
+        <Animated.Text
+          entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
+          style={[
+            styles.titleText,
+            { fontSize: horizontalScale(titleTextSize) },
+          ]}
+        >
+          {title.toUpperCase()}
+        </Animated.Text>
+        <Animated.Text
+          entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
+          style={styles.genres}
+        >
+          {genres}
+        </Animated.Text>
+      </View>
       <View style={styles.ratingComponentContainer}>
         <RatingComponent rating={rating} />
       </View>
@@ -58,14 +73,28 @@ const styles = StyleSheet.create({
     width: "20%",
     justifyContent: "center",
   },
-  titleText: {
+  titleContainer: {
+    // backgroundColor: "purple",
+    height: "100%",
     width: "60%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  titleText: {
+    width: "100%",
     color: colors.white,
-    fontSize: horizontalScale(22),
     textAlign: "center",
     fontFamily: customFonts.bangers,
   },
   ratingComponentContainer: {
     width: "20%",
+  },
+  genres: {
+    position: "absolute",
+    bottom: "5%",
+    color: colors.gray,
+    fontSize: horizontalScale(11),
+    textAlign: "center",
+    fontFamily: customFonts.lato,
   },
 });

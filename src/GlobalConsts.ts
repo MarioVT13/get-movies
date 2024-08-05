@@ -1,3 +1,8 @@
+// API
+export const API_KEY = process.env.EXPO_TMBD_API_KEY;
+export const BASE_URL = "https://api.themoviedb.org/3";
+// API - end
+
 // COLORS
 export const colors = {
   white: "#fff",
@@ -16,16 +21,21 @@ export const colors = {
   semiTransparentLight: "rgba(0,0,0,0.3)",
   semiTransparentDark: "rgba(0,0,0,0.7)",
 };
+// COLORS - end
 
+// FONTS
 export const customFonts = {
   anton: "Anton_400Regular",
   bangers: "Bangers_400Regular",
   lato: "Lato_400Regular",
   latoBlack: "Lato_900Black",
 };
+// FONTS - end
 
+// ERRORS
 export const errorLoadingMovieList = "Something went wrong";
 export const errorFindingMovies = "No movies to show";
-export const errorMovieDetails = "No info available";
+export const errorMovieDetails = "No info available :(";
 export const errorMovieTitle = "Unknown title";
 export const helloMessage = "I hope you like my app :)";
+// ERRORS - end

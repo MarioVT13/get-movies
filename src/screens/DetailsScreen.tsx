@@ -24,6 +24,7 @@ import BackHeader from "../components/BackHeader";
 import BounceButton from "../components/BounceButton";
 import useMovieDetails from "../hooks/useMovieDetails";
 import { MovieItemDataType } from "../types/DataTypes";
+import { getMovieGenres } from "../utils/MapDataUtil";
 
 export default function DetailsScreen() {
   const { params } = useRoute();
@@ -39,9 +40,10 @@ export default function DetailsScreen() {
   } = navParams?.data;
 
   const { movDetails, isLoading, error } = useMovieDetails({ id });
-  const tagline = movDetails?.tagline ?? "";
   const description = (overview?.length && overview) || errorMovieDetails;
   const imageUri = poster_path ?? backdrop_path ?? null;
+  const tagline = movDetails?.tagline ?? "";
+  const movieGenres = getMovieGenres(movDetails?.genres || []);
 
   const dateTime = dayjs(release_date).format("MMM-DD-YYYY");
 
@@ -53,9 +55,17 @@ export default function DetailsScreen() {
     );
   }
 
-  if (error || !movDetails) {
+  if (error) {
+    console.log("ERROR: ", error);
+
     return (
       <View style={styles.parentContainer}>
+        <BackHeader
+          title={title}
+          genres={movieGenres}
+          rating={vote_average}
+          style={{ height: "12%" }}
+        />
         <Text style={styles.errorText}>{errorLoadingMovieList}:</Text>
         <Text style={styles.errorText}>{error ?? errorMovieDetails}</Text>
       </View>
@@ -95,6 +105,7 @@ export default function DetailsScreen() {
           </Animated.ScrollView>
           <BackHeader
             title={title}
+            genres={movieGenres}
             rating={vote_average}
             style={{ height: "12%" }}
           />

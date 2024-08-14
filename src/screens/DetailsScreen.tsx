@@ -56,7 +56,7 @@ export default function DetailsScreen() {
   }
 
   if (error) {
-    console.log("ERROR: ", error);
+    console.log("ERROR in Details Screen: ", error);
 
     return (
       <View style={styles.parentContainer}>

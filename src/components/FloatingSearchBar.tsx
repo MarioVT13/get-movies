@@ -25,13 +25,19 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
     onResults(movies);
   }, [movies]);
 
-  const handleSearch = async () => {
-    await searchMovieByTitle(query);
-  };
+  useEffect(() => {
+    // if user clears the text manually, clear the search res as well
+    if (!query.length) onResults([]);
+  }, [query]);
 
   const clearText = () => {
     setQuery("");
     onResults([]); // on clear text, clear search results too
+  };
+
+  const handleSearch = async () => {
+    // do not initiate a search on an empty string, as it triggers the loader needlessly
+    if (query.length) await searchMovieByTitle(query);
   };
 
   return (
@@ -67,7 +73,7 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
         </TouchableOpacity>
       )}
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={styles.error}>Error</Text>}
     </View>
   );
 };

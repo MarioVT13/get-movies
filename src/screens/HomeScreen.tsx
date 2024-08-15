@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     marginTop: "20%",
     // ============================
-    width: "100%",
+    minWidth: "100%", // minWidth is needed here to avoid a bug when there is only 1 item in the list
     paddingVertical: "20%",
     paddingHorizontal: "8%",
   },

@@ -7,18 +7,27 @@ import {
   View,
   RefreshControl,
   FlatList,
+  TouchableOpacity,
+  Animated,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
 } from "react-native";
 import MovieListItem from "../components/MovieListItem";
 import usePopularMovies from "../hooks/usePopularMovies";
 import { MovieItemDataType } from "../types/DataTypes";
 import { colors, errorLoadingMovieList } from "../GlobalConsts";
 import FloatingSearchBar from "../components/FloatingSearchBar";
+import Icon from "react-native-vector-icons/Ionicons";
+import { horizontalScale } from "../utils/ScalingUtil";
 
 export default function HomeScreen() {
   const { movies, isLoading, error, refreshMovies } = usePopularMovies();
   const [refreshing, setRefreshing] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState<MovieItemDataType[]>([]);
+
   const flatListRef = useRef<FlatList>(null);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -69,6 +78,17 @@ export default function HomeScreen() {
     return filteredMovies.length > 0 ? filteredMovies : movies;
   }, [filteredMovies, movies]);
 
+  const handleScroll = useCallback(
+    Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event.nativeEvent.contentOffset.y;
+        setShowScrollButton(offsetY > 250);
+      },
+      useNativeDriver: false, // The native drivers don't support scroll animations
+    }),
+    []
+  );
+
   return (
     <ImageBackground
       source={require("../../assets/get-movies-bg.jpg")}
@@ -92,11 +112,24 @@ export default function HomeScreen() {
             tintColor={colors.rust}
           />
         }
+        onScroll={handleScroll}
         onEndReached={refreshMovies}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
       <FloatingSearchBar onResults={handleSearchResults} />
+      {showScrollButton && (
+        <TouchableOpacity
+          onPress={() => resetScrollPos()}
+          style={styles.scrollToTopButton}
+        >
+          <Icon
+            name={"arrow-up-circle"}
+            size={horizontalScale(30)}
+            color={colors.gray}
+          />
+        </TouchableOpacity>
+      )}
     </ImageBackground>
   );
 }
@@ -109,7 +142,6 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     marginTop: "20%",
-    // ============================
     minWidth: "100%", // minWidth is needed here to avoid a bug when there is only 1 item in the list
     paddingVertical: "20%",
     paddingHorizontal: "8%",
@@ -119,5 +151,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: "10%",
     textAlign: "center",
+  },
+  scrollToTopButton: {
+    width: horizontalScale(40),
+    height: horizontalScale(40),
+    backgroundColor: colors.semiTransparentDark,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    alignSelf: "center",
+    bottom: "5%",
+    borderRadius: horizontalScale(20),
+    borderWidth: 1,
+    borderColor: colors.lightGray,
+    opacity: 0.8,
   },
 });

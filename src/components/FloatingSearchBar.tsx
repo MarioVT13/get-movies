@@ -7,17 +7,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { colors, customFonts } from "../GlobalConsts";
-import { useMovieSearch } from "../hooks/useMovieSearch";
-import { MovieItemDataType } from "../types/DataTypes";
-import { horizontalScale } from "../utils/ScalingUtil";
-import Icon from "react-native-vector-icons/Ionicons";
 import Animated, {
-  BounceIn,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import Icon from "react-native-vector-icons/Ionicons";
+import { colors, customFonts } from "../GlobalConsts";
+import { useMovieSearch } from "../hooks/useMovieSearch";
+import { MovieItemDataType } from "../types/DataTypes";
+import { horizontalScale } from "../utils/ScalingUtil";
 
 interface FloatingSearchBarProps {
   onResults: (movies: MovieItemDataType[]) => void;

@@ -45,7 +45,9 @@ export default function DetailsScreen() {
   const tagline = movDetails?.tagline ?? "";
   const movieGenres = getMovieGenres(movDetails?.genres || []);
 
-  const dateTime = dayjs(release_date).format("MMM-DD-YYYY");
+  const dateTime = release_date?.length
+    ? dayjs(release_date).format("MMM-DD-YYYY")
+    : null;
 
   if (isLoading) {
     return (
@@ -109,16 +111,19 @@ export default function DetailsScreen() {
             rating={vote_average}
             style={{ height: "12%" }}
           />
-          <Animated.View
-            style={styles.dateTextContainer}
-            entering={SlideInRight.duration(700)
-              .springify()
-              .mass(2)
-              .damping(30)
-              .delay(500)}
-          >
-            <Text style={[styles.dateText]}>{dateTime}</Text>
-          </Animated.View>
+          {dateTime && (
+            <Animated.View
+              style={styles.dateTextContainer}
+              entering={SlideInRight.duration(700)
+                .springify()
+                .mass(2)
+                .damping(30)
+                .delay(500)}
+            >
+              <Text style={[styles.dateText]}>{dateTime}</Text>
+            </Animated.View>
+          )}
+
           <BounceButton />
         </ImageBackground>
       </Animated.View>

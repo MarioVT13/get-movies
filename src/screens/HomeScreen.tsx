@@ -66,8 +66,10 @@ export default function HomeScreen() {
   const errorMessage = useMemo(() => {
     return (
       <View style={styles.parentContainer}>
-        <Text style={styles.errorText}>{errorLoadingMovieList}:</Text>
-        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.errorText}>{errorLoadingMovieList}!</Text>
+        {error && (
+           <Text style={styles.errorText}>{error}</Text>
+        )}
       </View>
     );
   }, [error]);

@@ -9,6 +9,7 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { colors } from "./src/GlobalConsts";
 import { Anton_400Regular } from "@expo-google-fonts/anton";
 import { Lato_400Regular, Lato_900Black } from "@expo-google-fonts/lato";
+import { PortalProvider } from "@gorhom/portal";
 
 function App() {
   const [fontsLoaded] = useFonts({
@@ -49,8 +50,10 @@ function App() {
 
   return (
     <NavigationContainer>
-      <StatusBar style="light" />
-      <RootStack />
+      <PortalProvider>
+        <StatusBar style="light" />
+        <RootStack />
+      </PortalProvider>
     </NavigationContainer>
   );
 }

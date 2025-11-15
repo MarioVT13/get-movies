@@ -46,7 +46,7 @@ export default function DetailsScreen() {
   const movieGenres = getMovieGenres(movDetails?.genres || []);
 
   const dateTime = release_date?.length
-    ? dayjs(release_date).format("MMM-DD-YYYY")
+    ? dayjs(release_date).format("YYYY")
     : null;
 
   if (isLoading) {

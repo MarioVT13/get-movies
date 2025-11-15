@@ -1,11 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import React, { useState } from "react";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Icon as ElementIcon } from "react-native-elements";
 import Animated, { StretchInY } from "react-native-reanimated";
 import { colors, customFonts } from "../GlobalConsts";
 import { horizontalScale } from "../utils/ScalingUtil";
 import RatingComponent from "./RatingComponent";
+import PortalPopup from "./PortalPopup";
 
 interface Props {
   title: string;
@@ -17,44 +25,71 @@ interface Props {
 export default function BackHeader(props: Props) {
   const { title, genres, rating, style } = props;
   const { goBack } = useNavigation();
+  const [isVisiblePopup, setIsVisiblePopup] = useState(false);
 
   const overSizedTitle = title?.length > 20;
   const titleTextSize = overSizedTitle ? 18 : 22;
 
+  const onPressFav = () => {
+    setIsVisiblePopup(true);
+  };
+
   return (
-    <View style={[styles.parentContainer, style]}>
-      <TouchableOpacity
-        onPress={() => goBack()}
-        style={styles.backBtnContainer}
+    <>
+      <View style={[styles.parentContainer, style]}>
+        <TouchableOpacity
+          onPress={() => goBack()}
+          style={styles.backBtnContainer}
+        >
+          <ElementIcon
+            name={"arrow-back"}
+            size={30}
+            color={colors.white}
+            style={{}}
+          />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Animated.Text
+            entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
+            style={[
+              styles.titleText,
+              { fontSize: horizontalScale(titleTextSize) },
+            ]}
+          >
+            {title.toUpperCase()}
+          </Animated.Text>
+          <Animated.Text
+            entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
+            style={styles.genres}
+          >
+            {genres}
+          </Animated.Text>
+        </View>
+        <TouchableOpacity
+          onPress={onPressFav}
+          style={styles.ratingComponentContainer}
+        >
+          <RatingComponent rating={rating} />
+        </TouchableOpacity>
+      </View>
+
+      <PortalPopup
+        visible={isVisiblePopup}
+        onClose={() => setIsVisiblePopup(false)}
       >
-        <ElementIcon
-          name={"arrow-back"}
-          size={30}
-          color={colors.white}
-          style={{}}
-        />
-      </TouchableOpacity>
-      <View style={styles.titleContainer}>
-        <Animated.Text
-          entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
-          style={[
-            styles.titleText,
-            { fontSize: horizontalScale(titleTextSize) },
-          ]}
+        <Text
+          style={{
+            color: "white",
+            fontSize: 18,
+            marginBottom: horizontalScale(10),
+            alignSelf: "center",
+          }}
         >
-          {title.toUpperCase()}
-        </Animated.Text>
-        <Animated.Text
-          entering={StretchInY.duration(500).mass(1).damping(30).delay(300)}
-          style={styles.genres}
-        >
-          {genres}
-        </Animated.Text>
-      </View>
-      <View style={styles.ratingComponentContainer}>
-        <RatingComponent rating={rating} />
-      </View>
-    </View>
+          Hello from Popup
+        </Text>
+        <Button title="Close" onPress={() => setIsVisiblePopup(false)} />
+      </PortalPopup>
+    </>
   );
 }
 

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Portal } from "@gorhom/portal";
 import { horizontalScale } from "../utils/ScalingUtil";
+import { colors } from "../GlobalConsts";
 
 type PopupProps = {
   visible: boolean;
@@ -106,11 +107,11 @@ const styles = StyleSheet.create({
     padding: horizontalScale(20),
   },
   card: {
-    minWidth: 260,
-    maxWidth: "95%",
-    borderRadius: 16,
-    backgroundColor: "#1f1f1f",
-    padding: 16,
+    width: "80%",
+    height: "60%",
+    borderRadius: 10,
+    backgroundColor: colors.rust,
+    padding: 5,
     shadowOpacity: 0.25,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 8 },

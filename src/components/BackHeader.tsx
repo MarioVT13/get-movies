@@ -14,6 +14,8 @@ import { colors, customFonts } from "../GlobalConsts";
 import { horizontalScale } from "../utils/ScalingUtil";
 import RatingComponent from "./RatingComponent";
 import PortalPopup from "./PortalPopup";
+import FavoritesScreen from "../screens/FavoritesScreen";
+import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 
 interface Props {
   title: string;
@@ -23,8 +25,8 @@ interface Props {
 }
 
 export default function BackHeader(props: Props) {
+  const { navigate, goBack } = useNavigation<RootStackNavigationProp>();
   const { title, genres, rating, style } = props;
-  const { goBack } = useNavigation();
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
 
   const overSizedTitle = title?.length > 20;
@@ -32,6 +34,11 @@ export default function BackHeader(props: Props) {
 
   const onPressFav = () => {
     setIsVisiblePopup(true);
+  };
+
+  const onPressFavMov = (item: any) => {
+    navigate("Details", { data: item });
+    setIsVisiblePopup(false);
   };
 
   return (
@@ -77,17 +84,12 @@ export default function BackHeader(props: Props) {
         visible={isVisiblePopup}
         onClose={() => setIsVisiblePopup(false)}
       >
-        <Text
-          style={{
-            color: "white",
-            fontSize: 18,
-            marginBottom: horizontalScale(10),
-            alignSelf: "center",
-          }}
-        >
-          Hello from Popup
-        </Text>
-        <Button title="Close" onPress={() => setIsVisiblePopup(false)} />
+        <FavoritesScreen onPress={onPressFavMov} />
+        <Button
+          color={colors.semiTransparentDark}
+          title="Close"
+          onPress={() => setIsVisiblePopup(false)}
+        />
       </PortalPopup>
     </>
   );

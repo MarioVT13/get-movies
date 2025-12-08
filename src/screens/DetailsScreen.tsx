@@ -1,6 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useContext } from "react";
 import {
   ActivityIndicator,
   ImageBackground,
@@ -25,6 +25,9 @@ import BounceButton from "../components/BounceButton";
 import useMovieDetails from "../hooks/useMovieDetails";
 import { MovieItemDataType } from "../types/DataTypes";
 import { getMovieGenres } from "../utils/MapDataUtil";
+import { Context } from "../Context";
+import { PlusButton } from "../components/PlusButton";
+import { useMovieStore } from "../store/movieStore";
 
 export default function DetailsScreen() {
   const { params } = useRoute();
@@ -39,9 +42,17 @@ export default function DetailsScreen() {
     backdrop_path,
   } = navParams?.data;
 
+  const { helloMessageSeen } = useContext(Context);
+  const favMovies = useMovieStore((state) => state.favMovies);
+  const addMovie = useMovieStore((state) => state.addMovie);
+
   const { movDetails, isLoading, error } = useMovieDetails({ id });
   const description = (overview?.length && overview) || errorMovieDetails;
   const imageUri = poster_path ?? backdrop_path ?? null;
+  // Use a local fallback image when there's no poster/backdrop path
+  const imageSource = imageUri
+    ? { uri: `https://image.tmdb.org/t/p/original${imageUri}` }
+    : require("../../assets/get-movies-bg.jpg");
   const tagline = movDetails?.tagline ?? "";
   const movieGenres = getMovieGenres(movDetails?.genres || []);
 
@@ -74,6 +85,12 @@ export default function DetailsScreen() {
     );
   }
 
+  const handlePlusButtonPress = () => {
+    console.log(`Add movie with ID ${id} to favorites`);
+    addMovie(navParams.data);
+  };
+  console.log("Favorite Movies in Store: ", favMovies);
+
   return (
     <ImageBackground
       source={require("../../assets/get-movies-bg.jpg")}
@@ -84,7 +101,7 @@ export default function DetailsScreen() {
         entering={ZoomIn.duration(400).mass(2).damping(20).delay(100)}
       >
         <ImageBackground
-          source={{ uri: `https://image.tmdb.org/t/p/original${imageUri}` }}
+          source={imageSource}
           style={styles.ImageBackgroundContainer}
           resizeMode="cover"
         >
@@ -124,7 +141,11 @@ export default function DetailsScreen() {
             </Animated.View>
           )}
 
-          <BounceButton />
+          {helloMessageSeen ? (
+            <PlusButton onPress={handlePlusButtonPress} />
+          ) : (
+            <BounceButton />
+          )}
         </ImageBackground>
       </Animated.View>
     </ImageBackground>

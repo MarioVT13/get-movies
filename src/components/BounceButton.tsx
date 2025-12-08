@@ -13,12 +13,12 @@ import { Context } from "../Context";
 export default function BounceButton() {
   const { helloMessageSeen, setHelloMessageSeen } = useContext(Context);
   const animationTrigger = useSharedValue(0.7); // Start at a reduced scale
-  const [contentVisible, setContentVisible] = useState(false); // State to control visibility
+  const [contentVisible, setContentVisible] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     // Initial delay handled here
-    const initialDelay = 8 * 1000;
+    const initialDelay = 3 * 1000;
     timeoutRef.current = setTimeout(() => {
       setContentVisible(true); // Show the content when the animation starts
       animationTrigger.value = withRepeat(

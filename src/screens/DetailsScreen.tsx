@@ -1,6 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
   ImageBackground,
@@ -19,7 +19,7 @@ import {
   errorLoadingMovieList,
   errorMovieDetails,
 } from "../GlobalConsts";
-import Screen, { horizontalScale } from "../utils/ScalingUtil";
+import Screen, { horizontalScale, verticalScale } from "../utils/ScalingUtil";
 import BackHeader from "../components/BackHeader";
 import BounceButton from "../components/BounceButton";
 import useMovieDetails from "../hooks/useMovieDetails";
@@ -28,6 +28,7 @@ import { getMovieGenres } from "../utils/MapDataUtil";
 import { Context } from "../Context";
 import { PlusButton } from "../components/PlusButton";
 import { useMovieStore } from "../store/movieStore";
+import ConfirmationText from "../components/ConfirmationText";
 
 export default function DetailsScreen() {
   const { params } = useRoute();
@@ -43,8 +44,11 @@ export default function DetailsScreen() {
   } = navParams?.data;
 
   const { helloMessageSeen } = useContext(Context);
+  const [showConfirmMsg, setShowConfirmMsg] = useState(false);
+
   const favMovies = useMovieStore((state) => state.favMovies);
   const addMovie = useMovieStore((state) => state.addMovie);
+  const isFavoriteMovie = useMovieStore((state) => state.isFavorite);
 
   const { movDetails, isLoading, error } = useMovieDetails({ id });
   const description = (overview?.length && overview) || errorMovieDetails;
@@ -86,10 +90,9 @@ export default function DetailsScreen() {
   }
 
   const handlePlusButtonPress = () => {
-    console.log(`Add movie with ID ${id} to favorites`);
     addMovie(navParams.data);
+    setShowConfirmMsg(true);
   };
-  console.log("Favorite Movies in Store: ", favMovies);
 
   return (
     <ImageBackground
@@ -141,10 +144,14 @@ export default function DetailsScreen() {
             </Animated.View>
           )}
 
-          {helloMessageSeen ? (
+          {helloMessageSeen && !!!isFavoriteMovie(id) ? (
             <PlusButton onPress={handlePlusButtonPress} />
           ) : (
             <BounceButton />
+          )}
+
+          {showConfirmMsg && (
+            <ConfirmationText style={{ marginBottom: verticalScale(50) }} />
           )}
         </ImageBackground>
       </Animated.View>

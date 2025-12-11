@@ -50,7 +50,7 @@ export default function FavoritesScreen({
 
   return (
     <ImageBackground
-      source={require("../../assets/get-movies-bg-red.jpg")}
+      source={require("../../assets/get-movies-bg-red.png")}
       style={styles.parentContainer}
     >
       <FlatList

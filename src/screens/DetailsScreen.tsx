@@ -46,7 +46,6 @@ export default function DetailsScreen() {
   const { helloMessageSeen } = useContext(Context);
   const [showConfirmMsg, setShowConfirmMsg] = useState(false);
 
-  const favMovies = useMovieStore((state) => state.favMovies);
   const addMovie = useMovieStore((state) => state.addMovie);
   const isFavoriteMovie = useMovieStore((state) => state.isFavorite);
 

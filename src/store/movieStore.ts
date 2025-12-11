@@ -18,7 +18,6 @@ export const useMovieStore = create<FavMoviesState>()(
 
       addMovie: (movie) => {
         const { favMovies } = get();
-        // Prevent duplicates
         const exists = favMovies.some((m) => m.id === movie.id);
         if (!exists) {
           set({ favMovies: [...favMovies, movie] });

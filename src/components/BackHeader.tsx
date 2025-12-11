@@ -11,11 +11,13 @@ import {
 import { Icon as ElementIcon } from "react-native-elements";
 import Animated, { StretchInY } from "react-native-reanimated";
 import { colors, customFonts } from "../GlobalConsts";
-import { horizontalScale } from "../utils/ScalingUtil";
+import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
 import RatingComponent from "./RatingComponent";
 import PortalPopup from "./PortalPopup";
 import FavoritesScreen from "../screens/FavoritesScreen";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Ionicons from "react-native-vector-icons/Ionicons"; // Import Ionicons
 
 interface Props {
   title: string;
@@ -84,12 +86,23 @@ export default function BackHeader(props: Props) {
         visible={isVisiblePopup}
         onClose={() => setIsVisiblePopup(false)}
       >
-        <FavoritesScreen onPress={onPressFavMov} />
-        <Button
-          color={colors.semiTransparentDark}
-          title="Close"
-          onPress={() => setIsVisiblePopup(false)}
+        <MaterialCommunityIcons // Add the heart icon here
+          name="heart"
+          size={verticalScale(25)}
+          color={colors.antiqueBronze}
+          style={styles.popupHeartIcon}
         />
+        <FavoritesScreen onPress={onPressFavMov} />
+        <TouchableOpacity
+          style={styles.popupCloseButton}
+          onPress={() => setIsVisiblePopup(false)}
+        >
+          <Ionicons
+            name="close"
+            size={horizontalScale(25)}
+            color={colors.semiTransparentLight}
+          />
+        </TouchableOpacity>
       </PortalPopup>
     </>
   );
@@ -133,5 +146,17 @@ const styles = StyleSheet.create({
     fontSize: horizontalScale(11),
     textAlign: "center",
     fontFamily: customFonts.lato,
+  },
+  popupHeartIcon: {
+    alignSelf: "center",
+    marginBottom: verticalScale(5),
+  },
+  popupCloseButton: {
+    alignSelf: "center",
+    transform: [{ translateY: verticalScale(5) }],
+    width: horizontalScale(100),
+    paddingVertical: verticalScale(3),
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

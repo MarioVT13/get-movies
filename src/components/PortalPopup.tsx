@@ -1,5 +1,5 @@
 // src/components/ui/Popup.tsx
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -39,7 +39,7 @@ export default function PortalPopup({
       Animated.parallel([
         Animated.timing(opacity, {
           toValue: backdropOpacity,
-          duration: 180,
+          duration: 400,
           useNativeDriver: true,
           easing: Easing.out(Easing.cubic),
         }),
@@ -47,22 +47,12 @@ export default function PortalPopup({
           toValue: 1,
           useNativeDriver: true,
           friction: 7,
-          tension: 90,
+          tension: 200,
         }),
       ]).start();
     } else {
-      Animated.parallel([
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 140,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scale, {
-          toValue: 0.92,
-          duration: 120,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      opacity.setValue(0);
+      scale.setValue(0.92);
     }
   }, [visible, backdropOpacity, opacity, scale]);
 
@@ -107,11 +97,11 @@ const styles = StyleSheet.create({
     padding: horizontalScale(20),
   },
   card: {
-    width: "80%",
-    height: "60%",
+    width: "90%",
+    height: "70%",
     borderRadius: 10,
     backgroundColor: colors.rust,
-    padding: 5,
+    padding: horizontalScale(10),
     shadowOpacity: 0.25,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 8 },

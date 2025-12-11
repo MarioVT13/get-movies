@@ -8,12 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { useMovieStore } from "../store/movieStore";
 import { MovieItemDataType } from "../types/DataTypes";
 import { colors, customFonts, errorMovieTitle } from "../GlobalConsts";
 import { verticalScale, horizontalScale } from "../utils/ScalingUtil";
-import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 
 export default function FavoritesScreen({
   onPress,
@@ -21,7 +19,6 @@ export default function FavoritesScreen({
   onPress: (item: MovieItemDataType) => void;
 }) {
   const favMovies = useMovieStore((state) => state.favMovies);
-  const { navigate } = useNavigation<RootStackNavigationProp>();
 
   const renderFavItem = ({ item }: { item: MovieItemDataType }) => {
     const { title, poster_path, backdrop_path } = item;
@@ -31,7 +28,6 @@ export default function FavoritesScreen({
       <TouchableOpacity
         style={styles.itemContainer}
         onPress={() => onPress(item)}
-        // onPress={() => navigate("Details", { data: item })}
         activeOpacity={0.7}
       >
         <View style={styles.imageContainer}>
@@ -82,15 +78,13 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingVertical: verticalScale(20),
+    paddingHorizontal: horizontalScale(5),
   },
   columnWrapper: {
     justifyContent: "space-around",
-    gap: 5, // Small gap between items
+    gap: 5,
   },
   itemContainer: {
-    // Logic for 3 items in a row:
-    // Available width is roughly (Screen Width - Padding * 2)
-    // We divide by 3 and subtract a little for gaps
     width: "30%",
     backgroundColor: colors.black,
     borderTopRightRadius: 30,
@@ -108,7 +102,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    // "Twice as small - almost": Original was 170, so ~90
     height: verticalScale(90),
     backgroundColor: colors.semiTransparentDark,
   },

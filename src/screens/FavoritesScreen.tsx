@@ -1,17 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FlatList,
-  Image,
   ImageBackground,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useMovieStore } from "../store/movieStore";
 import { MovieItemDataType } from "../types/DataTypes";
-import { colors, customFonts, errorMovieTitle } from "../GlobalConsts";
+import { colors, customFonts } from "../GlobalConsts";
 import { verticalScale, horizontalScale } from "../utils/ScalingUtil";
+import FavoriteMovieItem from "../components/FavoriteMovieItem"; // Import the new component
 
 export default function FavoritesScreen({
   onPress,
@@ -19,32 +18,29 @@ export default function FavoritesScreen({
   onPress: (item: MovieItemDataType) => void;
 }) {
   const favMovies = useMovieStore((state) => state.favMovies);
+  const [showDeleteOption, setShowDeleteOption] = useState(false); // New state for delete option visibility
 
-  const renderFavItem = ({ item }: { item: MovieItemDataType }) => {
-    const { title, poster_path, backdrop_path } = item;
-    const imageUri = poster_path ?? backdrop_path ?? null;
+  const toggleDeleteOption = () => {
+    setShowDeleteOption((prev) => !prev);
+  };
 
+  const renderFavItem = ({
+    item,
+    index,
+  }: {
+    item: MovieItemDataType;
+    index: number;
+  }) => {
+    // Destructure index from FlatList renderItem prop
+    // Render the new FavoriteMovieItem component
     return (
-      <TouchableOpacity
-        style={styles.itemContainer}
-        onPress={() => onPress(item)}
-        activeOpacity={0.7}
-      >
-        <View style={styles.imageContainer}>
-          <Image
-            source={
-              imageUri
-                ? { uri: `https://image.tmdb.org/t/p/w500${imageUri}` }
-                : require("../../assets/missing-poster.jpg")
-            }
-            style={styles.image}
-            resizeMode="cover"
-          />
-        </View>
-        <Text style={styles.title} numberOfLines={2}>
-          {title.length !== 0 ? title?.toUpperCase() : errorMovieTitle}
-        </Text>
-      </TouchableOpacity>
+      <FavoriteMovieItem
+        item={item}
+        onPress={onPress}
+        onLongPress={toggleDeleteOption}
+        showDeleteOption={showDeleteOption}
+        index={index} // Pass index to the FavoriteMovieItem
+      />
     );
   };
 
@@ -83,39 +79,6 @@ const styles = StyleSheet.create({
   columnWrapper: {
     justifyContent: "space-around",
     gap: 5,
-  },
-  itemContainer: {
-    width: "30%",
-    backgroundColor: colors.black,
-    borderTopRightRadius: 30,
-    borderBottomLeftRadius: 10,
-    overflow: "hidden",
-    marginBottom: verticalScale(15),
-    borderColor: colors.lightGray,
-    borderWidth: 0.5,
-    // Shadows
-    shadowColor: colors.black,
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 3,
-  },
-  imageContainer: {
-    width: "100%",
-    height: verticalScale(90),
-    backgroundColor: colors.semiTransparentDark,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-  title: {
-    marginVertical: 4,
-    marginHorizontal: 4,
-    fontSize: verticalScale(9),
-    color: colors.lightGray,
-    textAlign: "center",
-    fontFamily: customFonts.anton,
   },
   emptyContainer: {
     alignItems: "center",

@@ -1,4 +1,3 @@
-// src/components/ui/Popup.tsx
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,

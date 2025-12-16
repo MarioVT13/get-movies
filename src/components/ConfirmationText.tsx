@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   Easing,
+  runOnJS,
 } from "react-native-reanimated";
 import { colors, customFonts } from "../GlobalConsts";
 import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
@@ -13,12 +14,14 @@ interface ConfirmationTextProps {
   text?: string;
   duration?: number;
   style?: ViewStyle;
+  onAnimationEnd?: () => void;
 }
 
 export default function ConfirmationText({
   text = "Saved",
   duration = 2.5 * 1000,
   style = {},
+  onAnimationEnd,
 }: ConfirmationTextProps) {
   const opacity = useSharedValue(1);
   const translateY = useSharedValue(0);
@@ -28,11 +31,19 @@ export default function ConfirmationText({
       duration: duration,
       easing: Easing.out(Easing.ease),
     });
-    translateY.value = withTiming(verticalScale(15), {
-      duration: duration,
-      easing: Easing.out(Easing.ease),
-    });
-  }, [duration, opacity, translateY]);
+    translateY.value = withTiming(
+      verticalScale(15),
+      {
+        duration: duration,
+        easing: Easing.out(Easing.ease),
+      },
+      (finished) => {
+        if (finished && onAnimationEnd) {
+          runOnJS(onAnimationEnd)(); // Wrap onAnimationEnd with runOnJS thread bridge
+        }
+      }
+    );
+  }, [duration, opacity, translateY, onAnimationEnd]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

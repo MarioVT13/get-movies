@@ -1,6 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   ImageBackground,
@@ -43,11 +43,12 @@ export default function DetailsScreen() {
     backdrop_path,
   } = navParams?.data;
 
-  const { helloMessageSeen } = useContext(Context);
-  const [showConfirmMsg, setShowConfirmMsg] = useState(false);
-
   const addMovie = useMovieStore((state) => state.addMovie);
   const isFavoriteMovie = useMovieStore((state) => state.isFavorite);
+  const favMovies = useMovieStore((state) => state.favMovies);
+
+  const { helloMessageSeen } = useContext(Context);
+  const [showConfirmMsg, setShowConfirmMsg] = useState(false);
 
   const { movDetails, isLoading, error } = useMovieDetails({ id });
   const description = (overview?.length && overview) || errorMovieDetails;
@@ -62,6 +63,11 @@ export default function DetailsScreen() {
   const dateTime = release_date?.length
     ? dayjs(release_date).format("YYYY")
     : null;
+
+  useEffect(() => {
+    // Trigger refresh (render) when favorite movies change
+    isFavoriteMovie(id);
+  }, [favMovies]);
 
   if (isLoading) {
     return (
@@ -150,7 +156,10 @@ export default function DetailsScreen() {
           )}
 
           {showConfirmMsg && (
-            <ConfirmationText style={{ marginBottom: verticalScale(50) }} />
+            <ConfirmationText
+              onAnimationEnd={() => showConfirmMsg && setShowConfirmMsg(false)}
+              style={{ marginBottom: verticalScale(50) }}
+            />
           )}
         </ImageBackground>
       </Animated.View>

@@ -18,6 +18,8 @@ import FavoritesScreen from "../screens/FavoritesScreen";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons"; // Import Ionicons
+import { useMovieStore } from "../store/movieStore";
+import { MovieItemDataType } from "../types/DataTypes";
 
 interface Props {
   title: string;
@@ -31,6 +33,8 @@ export default function BackHeader(props: Props) {
   const { title, genres, rating, style } = props;
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
 
+  const deleteFavMovie = useMovieStore((state) => state.removeMovie);
+
   const overSizedTitle = title?.length > 20;
   const titleTextSize = overSizedTitle ? 18 : 22;
 
@@ -38,9 +42,13 @@ export default function BackHeader(props: Props) {
     setIsVisiblePopup(true);
   };
 
-  const onPressFavMov = (item: any) => {
+  const onPressFavMov = (item: MovieItemDataType) => {
     navigate("Details", { data: item });
     setIsVisiblePopup(false);
+  };
+
+  const onDeleteFavMovie = (id: number) => {
+    deleteFavMovie(id);
   };
 
   return (
@@ -92,7 +100,7 @@ export default function BackHeader(props: Props) {
           color={colors.antiqueBronze}
           style={styles.popupHeartIcon}
         />
-        <FavoritesScreen onPress={onPressFavMov} />
+        <FavoritesScreen onPress={onPressFavMov} onDelete={onDeleteFavMovie} />
         <TouchableOpacity
           style={styles.popupCloseButton}
           onPress={() => setIsVisiblePopup(false)}

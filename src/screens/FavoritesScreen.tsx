@@ -14,8 +14,10 @@ import FavoriteMovieItem from "../components/FavoriteMovieItem"; // Import the n
 
 export default function FavoritesScreen({
   onPress,
+  onDelete,
 }: {
   onPress: (item: MovieItemDataType) => void;
+  onDelete: (item: number) => void;
 }) {
   const favMovies = useMovieStore((state) => state.favMovies);
   const [showDeleteOption, setShowDeleteOption] = useState(false); // New state for delete option visibility
@@ -31,15 +33,14 @@ export default function FavoritesScreen({
     item: MovieItemDataType;
     index: number;
   }) => {
-    // Destructure index from FlatList renderItem prop
-    // Render the new FavoriteMovieItem component
     return (
       <FavoriteMovieItem
         item={item}
         onPress={onPress}
+        onDelete={onDelete}
         onLongPress={toggleDeleteOption}
         showDeleteOption={showDeleteOption}
-        index={index} // Pass index to the FavoriteMovieItem
+        index={index}
       />
     );
   };

@@ -4,9 +4,10 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
+  Easing,
 } from "react-native-reanimated";
 import { colors, customFonts } from "../GlobalConsts";
-import { horizontalScale } from "../utils/ScalingUtil";
+import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
 
 interface ConfirmationTextProps {
   text?: string;
@@ -20,14 +21,23 @@ export default function ConfirmationText({
   style = {},
 }: ConfirmationTextProps) {
   const opacity = useSharedValue(1);
+  const translateY = useSharedValue(0);
 
   useEffect(() => {
-    opacity.value = withTiming(0, { duration: duration });
-  }, []);
+    opacity.value = withTiming(0, {
+      duration: duration,
+      easing: Easing.out(Easing.ease),
+    });
+    translateY.value = withTiming(verticalScale(15), {
+      duration: duration,
+      easing: Easing.out(Easing.ease),
+    });
+  }, [duration, opacity, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
+      transform: [{ translateY: translateY.value }],
     };
   });
 

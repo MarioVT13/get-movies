@@ -18,7 +18,8 @@ interface FavoriteMovieItemProps {
   onPress: (item: MovieItemDataType) => void;
   onLongPress: () => void;
   showDeleteOption: boolean;
-  index: number; // Add index prop
+  index: number;
+  onDelete: (id: number) => void;
 }
 
 export default function FavoriteMovieItem({
@@ -26,7 +27,8 @@ export default function FavoriteMovieItem({
   onPress,
   onLongPress,
   showDeleteOption,
-  index, // Destructure index
+  index,
+  onDelete,
 }: FavoriteMovieItemProps) {
   const { title, poster_path, backdrop_path } = item;
   const imageUri = poster_path ?? backdrop_path ?? null;
@@ -45,7 +47,7 @@ export default function FavoriteMovieItem({
       const direction = index % 2 === 0 ? 1 : -1; // Determine direction based on index
       // Start gentle shivering animation when delete option is visible
       shakeOffset.value = withRepeat(
-        withTiming(horizontalScale(2) * direction, {
+        withTiming(horizontalScale(1.2) * direction, {
           duration: 100,
           easing: Easing.inOut(Easing.ease),
         }),
@@ -83,7 +85,10 @@ export default function FavoriteMovieItem({
         </Text>
 
         {showDeleteOption && (
-          <TouchableOpacity style={styles.deleteIconOverlay}>
+          <TouchableOpacity
+            onPress={() => onDelete(item?.id)}
+            style={styles.deleteIconOverlay}
+          >
             <MaterialCommunityIcons
               name="delete-outline"
               size={horizontalScale(24)}

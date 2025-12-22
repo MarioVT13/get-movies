@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RootStack from "./src/navigation/stacks/RootStack";
 import { Bangers_400Regular, useFonts } from "@expo-google-fonts/bangers";
 import { ActivityIndicator, StyleSheet } from "react-native";
@@ -49,18 +49,23 @@ function App() {
   }
 
   return (
-    <NavigationContainer>
-      <PortalProvider>
-        <StatusBar style="light" />
-        <RootStack />
-      </PortalProvider>
-    </NavigationContainer>
+    <GestureHandlerRootView style={styles.parentContainer}>
+      <NavigationContainer>
+        <PortalProvider>
+          <StatusBar style="light" />
+          <RootStack />
+        </PortalProvider>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 
-export default gestureHandlerRootHOC(App);
+export default App;
 
 const styles = StyleSheet.create({
+  parentContainer: {
+    flex: 1,
+  },
   indicator: {
     alignSelf: "center",
     position: "absolute",

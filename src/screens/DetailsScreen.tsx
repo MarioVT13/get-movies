@@ -41,7 +41,7 @@ export default function DetailsScreen() {
     release_date,
     poster_path,
     backdrop_path,
-  } = navParams?.data;
+  } = navParams?.data || {};
 
   const addMovie = useMovieStore((state) => state.addMovie);
   const isFavoriteMovie = useMovieStore((state) => state.isFavorite);

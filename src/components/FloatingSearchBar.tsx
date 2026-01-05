@@ -17,7 +17,6 @@ import { colors, customFonts } from "../GlobalConsts";
 import { useMovieSearch } from "../hooks/useMovieSearch";
 import { MovieItemDataType } from "../types/DataTypes";
 import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface FloatingSearchBarProps {
   onResults: (movies: MovieItemDataType[]) => void;
@@ -87,7 +86,7 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
   return (
     <View style={styles.parentContainer}>
       <TouchableOpacity style={styles.heartIconContainer}>
-        <MaterialCommunityIcons
+        <Icon
           name="heart-outline"
           size={verticalScale(22)}
           color={colors.lightGray}
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
   heartIconContainer: {
     alignSelf: "center",
     backgroundColor: colors.semiTransparentDark,
-    borderRadius: 25,
+    borderRadius: 30,
     padding: 10,
   },
   heartIcon: {

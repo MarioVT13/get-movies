@@ -17,6 +17,12 @@ import { colors, customFonts } from "../GlobalConsts";
 import { useMovieSearch } from "../hooks/useMovieSearch";
 import { MovieItemDataType } from "../types/DataTypes";
 import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import PortalPopup from "./PortalPopup";
+import FavoritesScreen from "../screens/FavoritesScreen";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
+import { useMovieStore } from "../store/movieStore";
 
 interface FloatingSearchBarProps {
   onResults: (movies: MovieItemDataType[]) => void;
@@ -27,6 +33,24 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
   const { movies, searchMovieByTitle, error, loading } = useMovieSearch();
   const [nothingFound, setNothingFound] = useState<boolean>(false);
   const bounceValue = useSharedValue(0);
+
+  // Popup state + navigation + store handlers moved from BackHeader
+  const [isVisiblePopup, setIsVisiblePopup] = useState(false);
+  const { navigate } = useNavigation<RootStackNavigationProp>();
+  const deleteFavMovie = useMovieStore((state) => state.removeMovie);
+
+  const onPressFavBtn = () => {
+    setIsVisiblePopup(true);
+  };
+
+  const onSelectFavMov = (item: MovieItemDataType) => {
+    navigate("Details", { data: item });
+    setIsVisiblePopup(false);
+  };
+
+  const onDeleteFavMovie = (id: number) => {
+    deleteFavMovie(id);
+  };
 
   useEffect(() => {
     onResults(movies);
@@ -85,8 +109,11 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
 
   return (
     <View style={styles.parentContainer}>
-      <TouchableOpacity style={styles.heartIconContainer}>
-        <Icon
+      <TouchableOpacity
+        style={styles.heartIconContainer}
+        onPress={onPressFavBtn}
+      >
+        <MaterialCommunityIcons
           name="heart-outline"
           size={verticalScale(22)}
           color={colors.lightGray}
@@ -135,6 +162,29 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
 
         {error && <Text style={styles.error}>Error</Text>}
       </View>
+
+      <PortalPopup
+        visible={isVisiblePopup}
+        onClose={() => setIsVisiblePopup(false)}
+      >
+        <MaterialCommunityIcons
+          name="heart"
+          size={verticalScale(25)}
+          color={colors.antiqueBronze}
+          style={styles.popupHeartIcon}
+        />
+        <FavoritesScreen onPress={onSelectFavMov} onDelete={onDeleteFavMovie} />
+        <TouchableOpacity
+          style={styles.popupCloseButton}
+          onPress={() => setIsVisiblePopup(false)}
+        >
+          <Icon
+            name="close"
+            size={horizontalScale(25)}
+            color={colors.semiTransparentLight}
+          />
+        </TouchableOpacity>
+      </PortalPopup>
     </View>
   );
 };
@@ -205,6 +255,18 @@ const styles = StyleSheet.create({
   },
   error: {
     color: "red",
+  },
+  popupHeartIcon: {
+    alignSelf: "center",
+    marginBottom: verticalScale(10),
+  },
+  popupCloseButton: {
+    alignSelf: "center",
+    transform: [{ translateY: verticalScale(5) }],
+    width: horizontalScale(100),
+    paddingVertical: verticalScale(3),
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

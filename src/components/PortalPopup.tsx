@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "90%",
-    height: "70%",
+    height: "75%", // Adjust Popup height as needed  (or use contentStyle)
     borderRadius: 10,
     backgroundColor: colors.rust,
     padding: horizontalScale(10),

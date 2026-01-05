@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React from "react";
 import {
-  Button,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,13 +12,7 @@ import Animated, { StretchInY } from "react-native-reanimated";
 import { colors, customFonts } from "../GlobalConsts";
 import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
 import RatingComponent from "./RatingComponent";
-import PortalPopup from "./PortalPopup";
-import FavoritesScreen from "../screens/FavoritesScreen";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useMovieStore } from "../store/movieStore";
-import { MovieItemDataType } from "../types/DataTypes";
 
 interface Props {
   title: string;
@@ -31,25 +24,9 @@ interface Props {
 export default function BackHeader(props: Props) {
   const { navigate, goBack } = useNavigation<RootStackNavigationProp>();
   const { title, genres, rating, style } = props;
-  const [isVisiblePopup, setIsVisiblePopup] = useState(false);
-
-  const deleteFavMovie = useMovieStore((state) => state.removeMovie);
 
   const overSizedTitle = title?.length > 20;
   const titleTextSize = overSizedTitle ? 18 : 22;
-
-  const onPressFav = () => {
-    setIsVisiblePopup(true);
-  };
-
-  const onPressFavMov = (item: MovieItemDataType) => {
-    navigate("Details", { data: item });
-    setIsVisiblePopup(false);
-  };
-
-  const onDeleteFavMovie = (id: number) => {
-    deleteFavMovie(id);
-  };
 
   return (
     <>
@@ -82,36 +59,13 @@ export default function BackHeader(props: Props) {
             {genres}
           </Animated.Text>
         </View>
-        <TouchableOpacity
-          onPress={onPressFav}
-          style={styles.ratingComponentContainer}
-        >
+        {/* rating is kept but no longer opens the popup (popup was moved to FloatingSearchBar) */}
+        <View style={styles.ratingComponentContainer}>
           <RatingComponent rating={rating} />
-        </TouchableOpacity>
+        </View>
       </View>
 
-      <PortalPopup
-        visible={isVisiblePopup}
-        onClose={() => setIsVisiblePopup(false)}
-      >
-        <MaterialCommunityIcons
-          name="heart"
-          size={verticalScale(25)}
-          color={colors.antiqueBronze}
-          style={styles.popupHeartIcon}
-        />
-        <FavoritesScreen onPress={onPressFavMov} onDelete={onDeleteFavMovie} />
-        <TouchableOpacity
-          style={styles.popupCloseButton}
-          onPress={() => setIsVisiblePopup(false)}
-        >
-          <Ionicons
-            name="close"
-            size={horizontalScale(25)}
-            color={colors.semiTransparentLight}
-          />
-        </TouchableOpacity>
-      </PortalPopup>
+      {/* PortalPopup moved to FloatingSearchBar */}
     </>
   );
 }
@@ -153,17 +107,5 @@ const styles = StyleSheet.create({
     fontSize: horizontalScale(11),
     textAlign: "center",
     fontFamily: customFonts.lato,
-  },
-  popupHeartIcon: {
-    alignSelf: "center",
-    marginBottom: verticalScale(5),
-  },
-  popupCloseButton: {
-    alignSelf: "center",
-    transform: [{ translateY: verticalScale(5) }],
-    width: horizontalScale(100),
-    paddingVertical: verticalScale(3),
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

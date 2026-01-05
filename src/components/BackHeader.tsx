@@ -17,7 +17,7 @@ import PortalPopup from "./PortalPopup";
 import FavoritesScreen from "../screens/FavoritesScreen";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Ionicons from "react-native-vector-icons/Ionicons"; // Import Ionicons
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useMovieStore } from "../store/movieStore";
 import { MovieItemDataType } from "../types/DataTypes";
 
@@ -94,7 +94,7 @@ export default function BackHeader(props: Props) {
         visible={isVisiblePopup}
         onClose={() => setIsVisiblePopup(false)}
       >
-        <MaterialCommunityIcons // Add the heart icon here
+        <MaterialCommunityIcons
           name="heart"
           size={verticalScale(25)}
           color={colors.antiqueBronze}
@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   titleContainer: {
-    // backgroundColor: "purple",
     height: "100%",
     width: "60%",
     alignItems: "center",

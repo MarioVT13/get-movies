@@ -16,7 +16,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { colors, customFonts } from "../GlobalConsts";
 import { useMovieSearch } from "../hooks/useMovieSearch";
 import { MovieItemDataType } from "../types/DataTypes";
-import { horizontalScale } from "../utils/ScalingUtil";
+import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface FloatingSearchBarProps {
   onResults: (movies: MovieItemDataType[]) => void;
@@ -84,71 +85,98 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
   }, [nothingFound]);
 
   return (
-    <View style={styles.searchBar}>
-      <TextInput
-        style={styles.inputField}
-        value={query}
-        onChangeText={setQuery}
-        autoCorrect={false}
-      />
-      <TouchableOpacity
-        onPress={() => handleSearch()}
-        style={styles.searchButtonContainer}
-        disabled={nothingFound || loading}
-      >
-        {loading ? (
-          <ActivityIndicator color={colors.lightGray} size="small" />
-        ) : (
-          <Animated.Text
-            style={[
-              styles.searchButton,
-              bounceAnim,
-              { color: searchButtonColor() },
-            ]}
-            numberOfLines={1}
-            ellipsizeMode="clip"
-          >
-            {searchButtonText()}
-          </Animated.Text>
-        )}
+    <View style={styles.parentContainer}>
+      <TouchableOpacity style={styles.heartIconContainer}>
+        <MaterialCommunityIcons
+          name="heart-outline"
+          size={verticalScale(22)}
+          color={colors.lightGray}
+          style={styles.heartIcon}
+        />
       </TouchableOpacity>
 
-      {query.length > 0 && (
-        <TouchableOpacity onPress={clearText} style={styles.clearButton}>
-          <Icon
-            name={"close-circle"}
-            size={horizontalScale(20)}
-            color={colors.gray}
-          />
+      <View style={styles.searchBar}>
+        <TextInput
+          style={styles.inputField}
+          value={query}
+          onChangeText={setQuery}
+          autoCorrect={false}
+        />
+        <TouchableOpacity
+          onPress={() => handleSearch()}
+          style={styles.searchButtonContainer}
+          disabled={nothingFound || loading}
+        >
+          {loading ? (
+            <ActivityIndicator color={colors.lightGray} size="small" />
+          ) : (
+            <Animated.Text
+              style={[
+                styles.searchButton,
+                bounceAnim,
+                { color: searchButtonColor() },
+              ]}
+              numberOfLines={1}
+              ellipsizeMode="clip"
+            >
+              {searchButtonText()}
+            </Animated.Text>
+          )}
         </TouchableOpacity>
-      )}
 
-      {error && <Text style={styles.error}>Error</Text>}
+        {query.length > 0 && (
+          <TouchableOpacity onPress={clearText} style={styles.clearButton}>
+            <Icon
+              name={"close-circle"}
+              size={horizontalScale(20)}
+              color={colors.gray}
+            />
+          </TouchableOpacity>
+        )}
+
+        {error && <Text style={styles.error}>Error</Text>}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  searchBar: {
+  parentContainer: {
     position: "absolute",
     width: "85%",
-    top: 50,
-    marginTop: "5%",
+    height: verticalScale(38),
+    top: verticalScale(55),
     flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  heartIconContainer: {
+    alignSelf: "center",
+    backgroundColor: colors.semiTransparentDark,
+    borderRadius: 25,
+    padding: 10,
+  },
+  heartIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  searchBar: {
+    flexDirection: "row",
+    width: "84%",
+    height: "100%",
     backgroundColor: colors.semiTransparentDark,
     borderRadius: 25,
     padding: 10,
   },
   inputField: {
     flex: 1,
-    height: 40,
     borderColor: colors.lightGray,
     borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 10,
     marginRight: 10,
     color: colors.lightGray,
-    fontSize: horizontalScale(16),
+    fontSize: horizontalScale(14),
     fontFamily: customFonts.lato,
     paddingLeft: 10,
   },
@@ -156,10 +184,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 5,
-    width: "22%",
+    width: "25%",
   },
   searchButton: {
-    fontSize: horizontalScale(16),
+    fontSize: horizontalScale(15),
     fontFamily: customFonts.lato,
     flexShrink: 1,
     textAlign: "center",

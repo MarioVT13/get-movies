@@ -27,6 +27,7 @@ import { MovieItemDataType } from "../types/DataTypes";
 import { getMovieGenres } from "../utils/MapDataUtil";
 import { Context } from "../Context";
 import { PlusButton } from "../components/PlusButton";
+import ShareButton from "../components/ShareButton";
 import { useMovieStore } from "../store/movieStore";
 import ConfirmationText from "../components/ConfirmationText";
 
@@ -154,6 +155,7 @@ export default function DetailsScreen() {
           ) : (
             <BounceButton />
           )}
+          <ShareButton />
 
           {showConfirmMsg && (
             <ConfirmationText

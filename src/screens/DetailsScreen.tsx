@@ -1,6 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   ImageBackground,
@@ -30,6 +30,7 @@ import { PlusButton } from "../components/PlusButton";
 import ShareButton from "../components/ShareButton";
 import { useMovieStore } from "../store/movieStore";
 import ConfirmationText from "../components/ConfirmationText";
+import { captureAndShareScreenshot } from "../utils/ShareUtil";
 
 export default function DetailsScreen() {
   const { params } = useRoute();
@@ -64,6 +65,12 @@ export default function DetailsScreen() {
   const dateTime = release_date?.length
     ? dayjs(release_date).format("YYYY")
     : null;
+
+  const cardRef = useRef<View>(null);
+
+  const handleSharePress = () => {
+    captureAndShareScreenshot(cardRef);
+  };
 
   useEffect(() => {
     // Trigger refresh (render) when favorite movies change
@@ -108,6 +115,8 @@ export default function DetailsScreen() {
       <Animated.View
         style={styles.contentContainer}
         entering={ZoomIn.duration(400).mass(2).damping(20).delay(100)}
+        ref={cardRef}
+        collapsable={false}
       >
         <ImageBackground
           source={imageSource}
@@ -157,7 +166,7 @@ export default function DetailsScreen() {
             ) : (
               <BounceButton />
             )}
-            <ShareButton />
+            <ShareButton onPress={handleSharePress} />
           </View>
 
           {showConfirmMsg && (
@@ -248,7 +257,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   placeHolder: {
-    width: horizontalScale(15),
+    width: horizontalScale(30),
     height: verticalScale(20),
     // backgroundColor: "yellow",
   },

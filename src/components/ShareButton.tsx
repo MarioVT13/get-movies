@@ -23,9 +23,6 @@ export default function ShareButton({ onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    position: "absolute",
-    bottom: verticalScale(5),
-    right: horizontalScale(20),
     padding: horizontalScale(5),
     borderRadius: 24,
     justifyContent: "center",

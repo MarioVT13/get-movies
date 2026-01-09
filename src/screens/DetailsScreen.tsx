@@ -150,17 +150,20 @@ export default function DetailsScreen() {
             </Animated.View>
           )}
 
-          {helloMessageSeen && !!!isFavoriteMovie(id) ? (
-            <PlusButton onPress={handlePlusButtonPress} />
-          ) : (
-            <BounceButton />
-          )}
-          <ShareButton />
+          <View style={styles.bottomButtonsContainer}>
+            <View style={styles.placeHolder} />
+            {helloMessageSeen && !!!isFavoriteMovie(id) ? (
+              <PlusButton onPress={handlePlusButtonPress} />
+            ) : (
+              <BounceButton />
+            )}
+            <ShareButton />
+          </View>
 
           {showConfirmMsg && (
             <ConfirmationText
               onAnimationEnd={() => showConfirmMsg && setShowConfirmMsg(false)}
-              style={{ marginBottom: verticalScale(50) }}
+              style={styles.confirmText}
             />
           )}
         </ImageBackground>
@@ -233,5 +236,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
     width: "100%",
     marginBottom: "5%",
+  },
+  bottomButtonsContainer: {
+    position: "absolute",
+    bottom: verticalScale(10),
+    width: "80%",
+    minHeight: verticalScale(40),
+    alignSelf: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  placeHolder: {
+    width: horizontalScale(15),
+    height: verticalScale(20),
+    // backgroundColor: "yellow",
+  },
+  confirmText: {
+    marginBottom: verticalScale(50),
+    marginRight: horizontalScale(20),
   },
 });

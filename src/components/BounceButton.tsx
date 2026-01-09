@@ -9,6 +9,7 @@ import Animated, {
 import { colors, helloMessage } from "../GlobalConsts";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Context } from "../Context";
+import { horizontalScale } from "../utils/ScalingUtil";
 
 export default function BounceButton() {
   const { helloMessageSeen, setHelloMessageSeen } = useContext(Context);
@@ -55,7 +56,7 @@ export default function BounceButton() {
             onPress={() => btnAlert()}
             style={{ alignItems: "center", justifyContent: "center" }}
           >
-            <Icon name={"happy-outline"} size={50} color={colors.gray} />
+            <Icon name={"happy-outline"} size={42} color={colors.gray} />
           </TouchableOpacity>
         )}
       </Animated.View>
@@ -73,13 +74,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    position: "absolute",
-    bottom: 0,
   },
   helloBtn: {
-    width: 100,
-    height: 100,
     alignItems: "center",
     justifyContent: "center",
+    padding: horizontalScale(5),
   },
 });

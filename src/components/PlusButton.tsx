@@ -2,6 +2,7 @@ import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { colors } from "../GlobalConsts";
+import { horizontalScale } from "../utils/ScalingUtil";
 
 interface PlusButtonProps {
   onPress: () => void;
@@ -22,7 +23,7 @@ export const PlusButton: React.FC<PlusButtonProps> = ({ onPress, style }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: horizontalScale(5),
     justifyContent: "center",
     alignItems: "center",
   },

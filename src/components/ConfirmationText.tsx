@@ -53,7 +53,7 @@ export default function ConfirmationText({
   });
 
   return (
-    <Animated.Text style={[styles.savedText, animatedStyle, style]}>
+    <Animated.Text style={[styles.savedText, style, animatedStyle]}>
       {text}
     </Animated.Text>
   );

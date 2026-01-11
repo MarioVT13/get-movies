@@ -7,11 +7,10 @@ import * as NavigationBar from "expo-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect } from "react";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, AppState } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import RootStack from "./src/navigation/stacks/RootStack";
 
-// 1. Keep the Splash Screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 function App() {
@@ -22,40 +21,55 @@ function App() {
     Lato_900Black,
   });
 
-  // 2. Configure System UI immediately on mount (Independent of fonts)
+  // ============================================================
+  //  ANDROID IMMERSIVE MODE CONFIGURATION
+  // ============================================================
   useEffect(() => {
-    async function configureBar() {
-      if (Platform.OS === "android") {
-        try {
-          // Setting transparent entails the content drawing behind the nav bar
-          await NavigationBar.setPositionAsync("absolute");
-          await NavigationBar.setBackgroundColorAsync("transparent");
-          await NavigationBar.setButtonStyleAsync("dark");
-        } catch (e) {
-          // Catch "Activity no longer available" errors during Hot Reload
-          console.log(
-            "Navigation Bar configuration skipped:",
-            (e as Error).message
-          );
-        }
-      }
-    }
-    configureBar();
-  }, []);
+    if (Platform.OS !== "android") return;
 
-  // 3. Define the onLayout callback to hide splash screen only when view is ready
+    const hideNavBar = async () => {
+      try {
+        // 1. Hide the bottom navigation bar completely
+        await NavigationBar.setVisibilityAsync("hidden");
+
+        // 2. Define swipe behavior:
+        // 'overlay-swipe' means swiping up reveals the bar ON TOP of your content
+        // This prevents your layout from "jumping" or resizing when the bar appears.
+        await NavigationBar.setBehaviorAsync("overlay-swipe");
+
+        // 3. Fallbacks (in case it temporarily appears)
+        // We still set these so if the bar DOES pop up, it looks nice.
+        await NavigationBar.setPositionAsync("absolute");
+        await NavigationBar.setBackgroundColorAsync("transparent");
+      } catch (e) {
+        console.log("NavBar Error:", e);
+      }
+    };
+
+    // Apply immediately on mount
+    hideNavBar();
+
+    // Re-apply whenever the app comes back to the foreground
+    // (Android loves to reset this when you switch apps)
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        hideNavBar();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+  // ============================================================
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 
-  // 4. While fonts load, you can return null to keep the Splash Screen up,
-  // or return your custom ActivityIndicator.
   if (!fontsLoaded) {
-    // If you prefer the native Splash Screen to persist until ready, return null here.
-    // If you specifically want your custom spinner, we need to hide the Splash Screen first.
-    // Assuming you want the seamless Splash -> App transition:
     return null;
   }
 
@@ -79,10 +93,5 @@ export default App;
 const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
-  },
-  indicator: {
-    alignSelf: "center",
-    position: "absolute",
-    top: "50%",
   },
 });

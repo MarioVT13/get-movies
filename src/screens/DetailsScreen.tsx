@@ -31,6 +31,7 @@ import ShareButton from "../components/ShareButton";
 import { useMovieStore } from "../store/movieStore";
 import ConfirmationText from "../components/ConfirmationText";
 import { captureAndShareScreenshot } from "../utils/ShareUtil";
+import MovieShareCard from "../components/MovieShareCard";
 
 export default function DetailsScreen() {
   const { params } = useRoute();
@@ -115,8 +116,6 @@ export default function DetailsScreen() {
       <Animated.View
         style={styles.contentContainer}
         entering={ZoomIn.duration(400).mass(2).damping(20).delay(100)}
-        ref={cardRef}
-        collapsable={false}
       >
         <ImageBackground
           source={imageSource}
@@ -177,6 +176,17 @@ export default function DetailsScreen() {
           )}
         </ImageBackground>
       </Animated.View>
+
+      <View style={styles.ghostViewWrapper}>
+        <MovieShareCard
+          ref={cardRef}
+          title={title}
+          tagline={tagline}
+          rating={vote_average}
+          imageSource={imageSource}
+          year={dateTime}
+        />
+      </View>
     </ImageBackground>
   );
 }
@@ -264,5 +274,10 @@ const styles = StyleSheet.create({
   confirmText: {
     marginBottom: verticalScale(50),
     marginRight: horizontalScale(20),
+  },
+  ghostViewWrapper: {
+    position: "absolute",
+    left: -2000, // Move it way off screen
+    top: 0,
   },
 });

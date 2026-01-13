@@ -56,7 +56,7 @@ export default function BounceButton() {
             onPress={() => btnAlert()}
             style={{ alignItems: "center", justifyContent: "center" }}
           >
-            <Icon name={"happy-outline"} size={42} color={colors.gray} />
+            <Icon name={"happy-outline"} size={40} color={colors.gray} />
           </TouchableOpacity>
         )}
       </Animated.View>
@@ -71,13 +71,12 @@ export default function BounceButton() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: horizontalScale(30),
     justifyContent: "center",
     alignItems: "center",
   },
   helloBtn: {
     alignItems: "center",
     justifyContent: "center",
-    padding: horizontalScale(5),
   },
 });

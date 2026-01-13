@@ -159,11 +159,13 @@ export default function DetailsScreen() {
           )}
 
           <View style={styles.bottomButtonsContainer}>
-            <View style={styles.placeHolder} />
-            {helloMessageSeen && !!!isFavoriteMovie(id) ? (
-              <PlusButton onPress={handlePlusButtonPress} />
+            {helloMessageSeen ? (
+              <View style={styles.placeHolder} />
             ) : (
               <BounceButton />
+            )}
+            {!!!isFavoriteMovie(id) && (
+              <PlusButton onPress={handlePlusButtonPress} />
             )}
             <ShareButton onPress={handleSharePress} />
           </View>

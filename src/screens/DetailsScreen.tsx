@@ -1,6 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   ImageBackground,
@@ -25,13 +25,13 @@ import BounceButton from "../components/BounceButton";
 import useMovieDetails from "../hooks/useMovieDetails";
 import { MovieItemDataType } from "../types/DataTypes";
 import { getMovieGenres } from "../utils/MapDataUtil";
-import { Context } from "../Context";
 import { PlusButton } from "../components/PlusButton";
 import ShareButton from "../components/ShareButton";
 import { useMovieStore } from "../store/movieStore";
 import ConfirmationText from "../components/ConfirmationText";
 import { captureAndShareScreenshot } from "../utils/ShareUtil";
 import MovieShareCard from "../components/MovieShareCard";
+import { useHelloMessageSeen } from "../store/helloMessageStore";
 
 export default function DetailsScreen() {
   const { params } = useRoute();
@@ -49,11 +49,13 @@ export default function DetailsScreen() {
   const addMovie = useMovieStore((state) => state.addMovie);
   const isFavoriteMovie = useMovieStore((state) => state.isFavorite);
   const favMovies = useMovieStore((state) => state.favMovies);
+  const isHelloMessageSeen = useHelloMessageSeen(
+    (state) => state.isHelloMessageSeen,
+  );
 
-  const { helloMessageSeen } = useContext(Context);
   const [showConfirmMsg, setShowConfirmMsg] = useState(false);
-
   const { movDetails, isLoading, error } = useMovieDetails({ id });
+
   const description = (overview?.length && overview) || errorMovieDetails;
   const imageUri = poster_path ?? backdrop_path ?? null;
   // Use a local fallback image when there's no poster/backdrop path
@@ -159,7 +161,7 @@ export default function DetailsScreen() {
           )}
 
           <View style={styles.bottomButtonsContainer}>
-            {helloMessageSeen ? (
+            {isHelloMessageSeen ? (
               <View style={styles.placeHolder} />
             ) : (
               <BounceButton />

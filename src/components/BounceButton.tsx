@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -8,11 +8,17 @@ import Animated, {
 } from "react-native-reanimated";
 import { colors, helloMessage } from "../GlobalConsts";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Context } from "../Context";
 import { horizontalScale } from "../utils/ScalingUtil";
+import { useHelloMessageSeen } from "../store/helloMessageStore";
 
 export default function BounceButton() {
-  const { helloMessageSeen, setHelloMessageSeen } = useContext(Context);
+  const isHelloMessageSeen = useHelloMessageSeen(
+    (state) => state.isHelloMessageSeen,
+  );
+  const setHelloMessageSeen = useHelloMessageSeen(
+    (state) => state.setHelloMessageSeen,
+  );
+
   const animationTrigger = useSharedValue(0.7); // Start at a reduced scale
   const [contentVisible, setContentVisible] = useState(false);
   const timeoutRef = useRef<number | null>(null);
@@ -29,7 +35,7 @@ export default function BounceButton() {
           mass: 1,
         }),
         -1, // Infinite repeats
-        true // Reverse the animation on every second iteration
+        true, // Reverse the animation on every second iteration
       );
     }, initialDelay) as unknown as number;
 
@@ -46,7 +52,7 @@ export default function BounceButton() {
     };
   });
 
-  if (helloMessageSeen) return;
+  if (isHelloMessageSeen) return;
 
   return (
     <View style={styles.container}>

@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     marginBottom: verticalScale(50),
-    marginRight: horizontalScale(20),
+    marginRight: horizontalScale(10),
   },
   ghostViewWrapper: {
     position: "absolute",

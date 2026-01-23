@@ -166,6 +166,7 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
       <PortalPopup
         visible={isVisiblePopup}
         onClose={() => setIsVisiblePopup(false)}
+        contentStyle={styles.portalPopupContainer}
       >
         <MaterialCommunityIcons
           name="heart"
@@ -267,6 +268,17 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(3),
     alignItems: "center",
     justifyContent: "center",
+  },
+  portalPopupContainer: {
+    borderRadius: horizontalScale(10),
+    borderWidth: 0.5,
+    borderColor: colors.red,
+    backgroundColor: colors.rust,
+    padding: horizontalScale(10),
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
   },
 });
 

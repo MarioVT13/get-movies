@@ -193,7 +193,7 @@ export default function DetailsScreen() {
         contentStyle={styles.portalPopupContainer}
         backdropOpacity={0.8}
       >
-        <RatePopup />
+        <RatePopup onPress={() => setIsVisiblePopup(false)} />
       </PortalPopup>
     </ImageBackground>
   );
@@ -276,7 +276,6 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     marginBottom: verticalScale(50),
-    marginRight: horizontalScale(10),
   },
   ghostViewWrapper: {
     position: "absolute",
@@ -292,9 +291,5 @@ const styles = StyleSheet.create({
     borderColor: colors.red,
     backgroundColor: colors.semiTransparentDark,
     padding: horizontalScale(10),
-    // shadowOpacity: 0.25,
-    // shadowRadius: 12,
-    // shadowOffset: { width: 0, height: 8 },
-    // elevation: 8,
   },
 });

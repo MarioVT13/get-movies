@@ -4,12 +4,21 @@ import { rateApp } from "../utils/RateAppUtil";
 import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
 import { colors, customFonts, helloMessage } from "../GlobalConsts";
 
-const RatePopup = () => {
+interface RateButtonProps {
+  onPress: () => void;
+}
+
+const RatePopup = ({ onPress }: RateButtonProps) => {
+  const handleRatePress = () => {
+    rateApp();
+    onPress();
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{helloMessage}</Text>
 
-      <TouchableOpacity onPress={rateApp} style={styles.button}>
+      <TouchableOpacity onPress={handleRatePress} style={styles.button}>
         <Text style={styles.btnText}>RATE</Text>
       </TouchableOpacity>
     </View>

@@ -6,7 +6,7 @@ import Animated, {
   withRepeat,
   withSpring,
 } from "react-native-reanimated";
-import { colors, helloMessage } from "../GlobalConsts";
+import { colors } from "../GlobalConsts";
 import Icon from "react-native-vector-icons/Ionicons";
 import { horizontalScale } from "../utils/ScalingUtil";
 import { useHelloMessageSeen } from "../store/helloMessageStore";
@@ -16,52 +16,48 @@ interface BounceButtonProps {
 }
 
 export default function BounceButton({ onPress }: BounceButtonProps) {
-  // const isHelloMessageSeen = useHelloMessageSeen(
-  //   (state) => state.isHelloMessageSeen,
-  // );
-  const isHelloMessageSeen = false; // testing
+  const isHelloMessageSeen = useHelloMessageSeen(
+    (state) => state.isHelloMessageSeen,
+  );
   const setHelloMessageSeen = useHelloMessageSeen(
     (state) => state.setHelloMessageSeen,
   );
 
   const animationTrigger = useSharedValue(0.7); // Start at a reduced scale
-  const [contentVisible, setContentVisible] = useState(false);
+  const [buttonVisible, setButtonVisible] = useState(isHelloMessageSeen);
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Initial delay handled here
     const initialDelay = 3 * 1000;
     timeoutRef.current = setTimeout(() => {
-      setContentVisible(true); // Show the content when the animation starts
+      setButtonVisible(true); // Show the content when the animation starts
       animationTrigger.value = withRepeat(
         withSpring(1, {
           damping: 8,
           stiffness: 150,
           mass: 1,
         }),
-        -1, // Infinite repeats
-        true, // Reverse the animation on every second iteration
+        -1, // infinite repetitions
+        true, // reverse the animation on every second iteration
       );
     }, initialDelay) as unknown as number;
 
-    // Cleanup function
+    // cleanup on unmount
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
   const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: animationTrigger.value }],
-    };
+    return isHelloMessageSeen
+      ? {}
+      : { transform: [{ scale: animationTrigger.value }] };
   });
-
-  if (isHelloMessageSeen) return;
 
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.helloBtn, animatedStyle]}>
-        {contentVisible && (
+        {buttonVisible && (
           <TouchableOpacity onPress={() => btnAlert()}>
             <Icon
               name={"happy-outline"}
@@ -76,7 +72,6 @@ export default function BounceButton({ onPress }: BounceButtonProps) {
 
   function btnAlert() {
     onPress();
-    // Alert.alert(helloMessage);
     setHelloMessageSeen(true);
   }
 }

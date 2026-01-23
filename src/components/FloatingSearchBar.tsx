@@ -34,7 +34,6 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
   const [nothingFound, setNothingFound] = useState<boolean>(false);
   const bounceValue = useSharedValue(0);
 
-  // Popup state + navigation + store handlers moved from BackHeader
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
   const { navigate } = useNavigation<RootStackNavigationProp>();
   const deleteFavMovie = useMovieStore((state) => state.removeMovie);

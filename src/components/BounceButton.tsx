@@ -11,10 +11,15 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { horizontalScale } from "../utils/ScalingUtil";
 import { useHelloMessageSeen } from "../store/helloMessageStore";
 
-export default function BounceButton() {
-  const isHelloMessageSeen = useHelloMessageSeen(
-    (state) => state.isHelloMessageSeen,
-  );
+interface BounceButtonProps {
+  onPress: () => void;
+}
+
+export default function BounceButton({ onPress }: BounceButtonProps) {
+  // const isHelloMessageSeen = useHelloMessageSeen(
+  //   (state) => state.isHelloMessageSeen,
+  // );
+  const isHelloMessageSeen = false; // testing
   const setHelloMessageSeen = useHelloMessageSeen(
     (state) => state.setHelloMessageSeen,
   );
@@ -48,7 +53,6 @@ export default function BounceButton() {
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: animationTrigger.value }],
-      opacity: contentVisible ? 1 : 0, // Use opacity to hide/show the content
     };
   });
 
@@ -58,11 +62,12 @@ export default function BounceButton() {
     <View style={styles.container}>
       <Animated.View style={[styles.helloBtn, animatedStyle]}>
         {contentVisible && (
-          <TouchableOpacity
-            onPress={() => btnAlert()}
-            style={{ alignItems: "center", justifyContent: "center" }}
-          >
-            <Icon name={"happy-outline"} size={40} color={colors.gray} />
+          <TouchableOpacity onPress={() => btnAlert()}>
+            <Icon
+              name={"happy-outline"}
+              size={horizontalScale(30)}
+              color={colors.gray}
+            />
           </TouchableOpacity>
         )}
       </Animated.View>
@@ -70,7 +75,8 @@ export default function BounceButton() {
   );
 
   function btnAlert() {
-    Alert.alert(helloMessage);
+    onPress();
+    // Alert.alert(helloMessage);
     setHelloMessageSeen(true);
   }
 }

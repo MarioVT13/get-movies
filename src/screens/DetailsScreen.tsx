@@ -31,7 +31,8 @@ import { useMovieStore } from "../store/movieStore";
 import ConfirmationText from "../components/ConfirmationText";
 import { captureAndShareScreenshot } from "../utils/ShareUtil";
 import MovieShareCard from "../components/MovieShareCard";
-import { useHelloMessageSeen } from "../store/helloMessageStore";
+import PortalPopup from "../components/PortalPopup";
+import RatePopup from "../components/RatePopup";
 
 export default function DetailsScreen() {
   const { params } = useRoute();
@@ -49,11 +50,9 @@ export default function DetailsScreen() {
   const addMovie = useMovieStore((state) => state.addMovie);
   const isFavoriteMovie = useMovieStore((state) => state.isFavorite);
   const favMovies = useMovieStore((state) => state.favMovies);
-  const isHelloMessageSeen = useHelloMessageSeen(
-    (state) => state.isHelloMessageSeen,
-  );
 
   const [showConfirmMsg, setShowConfirmMsg] = useState(false);
+  const [isVisiblePopup, setIsVisiblePopup] = useState(false);
   const { movDetails, isLoading, error } = useMovieDetails({ id });
 
   const description = (overview?.length && overview) || errorMovieDetails;
@@ -161,11 +160,7 @@ export default function DetailsScreen() {
           )}
 
           <View style={styles.bottomButtonsContainer}>
-            {isHelloMessageSeen ? (
-              <View style={styles.placeHolder} />
-            ) : (
-              <BounceButton />
-            )}
+            <BounceButton onPress={() => setIsVisiblePopup(true)} />
             {!!!isFavoriteMovie(id) && (
               <PlusButton onPress={handlePlusButtonPress} />
             )}
@@ -191,6 +186,15 @@ export default function DetailsScreen() {
           year={dateTime}
         />
       </View>
+
+      <PortalPopup
+        visible={isVisiblePopup}
+        onClose={() => setIsVisiblePopup(false)}
+        contentStyle={styles.portalPopupContainer}
+        backdropOpacity={0.8}
+      >
+        <RatePopup />
+      </PortalPopup>
     </ImageBackground>
   );
 }
@@ -270,11 +274,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  placeHolder: {
-    width: horizontalScale(30),
-    height: verticalScale(20),
-    // backgroundColor: "yellow",
-  },
   confirmText: {
     marginBottom: verticalScale(50),
     marginRight: horizontalScale(10),
@@ -283,5 +282,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: -2000, // Move it way off screen
     top: 0,
+  },
+  portalPopupContainer: {
+    marginTop: verticalScale(300),
+    width: "90%",
+    height: "auto",
+    borderRadius: horizontalScale(10),
+    borderWidth: 0.5,
+    borderColor: colors.red,
+    backgroundColor: colors.semiTransparentDark,
+    padding: horizontalScale(10),
+    // shadowOpacity: 0.25,
+    // shadowRadius: 12,
+    // shadowOffset: { width: 0, height: 8 },
+    // elevation: 8,
   },
 });

@@ -26,7 +26,7 @@ export default function PortalPopup({
   onClose,
   children,
   dismissible = true,
-  backdropOpacity = 0.5,
+  backdropOpacity = 0.7,
   containerStyle,
   contentStyle,
 }: PopupProps) {

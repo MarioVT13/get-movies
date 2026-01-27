@@ -7,44 +7,86 @@ import { API_KEY, BASE_URL } from "../GlobalConsts";
 const usePopularMovies = () => {
   const [movies, setMovies] = useState<MovieItemDataType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Track the current page
   const [page, setPage] = useState(1);
+  // Track if we have reached the end of the DB
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchPopularMovies = useCallback(async () => {
-    if (!hasMore || isLoading) return; // Prevent duplicate calls
-    setIsLoading(true);
+  // 1. Helper function to fetch a specific page
+  const fetchPage = async (pageNumber: number) => {
+    const response = await axios.get(`${BASE_URL}/movie/popular`, {
+      params: {
+        api_key: API_KEY,
+        page: pageNumber,
+      },
+    });
 
+    const validMovies = (response.data?.results || []).filter(isValidMovieData);
+
+    return {
+      data: validMovies,
+      totalPages: response.data.total_pages,
+    };
+  };
+
+  // 2. LOAD MORE (Used for Infinite Scroll)
+  const loadMore = useCallback(async () => {
+    // Stop if already loading or no more pages
+    if (isLoading || !hasMore) return;
+
+    setIsLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/movie/popular`, {
-        params: {
-          api_key: API_KEY,
-          page,
-        },
-      });
-      let validMovies = response.data?.results;
-      if (Array.isArray(validMovies)) {
-        validMovies = validMovies.filter(isValidMovieData);
-      } else {
-        validMovies = [];
-      }
-      setMovies((prevMovies) => [...prevMovies, ...validMovies]);
-      setPage((prevPage) => prevPage + 1);
-      setHasMore(response.data.page < response.data.total_pages);
-      // console.log("Get pop movies: ", validMovies);
-      // console.log(`Data for page ${page} fetched`); // Debug data fetch
+      const { data, totalPages } = await fetchPage(page);
+
+      // Append new data to existing list
+      setMovies((prev) => [...prev, ...data]);
+
+      // Prepare next page number
+      setPage((prev) => prev + 1);
+      setHasMore(page < totalPages);
     } catch (err: any) {
-      setError(err.response?.data?.message ?? "Unknown error occurred");
+      setError(err.message ?? "Unknown error");
     } finally {
       setIsLoading(false);
     }
-  }, [API_KEY, page, hasMore, isLoading]);
+  }, [page, hasMore, isLoading]);
 
-  useEffect(() => {
-    fetchPopularMovies();
+  // 3. REFRESH (Used for Pull-to-Refresh)
+  const refresh = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      // Force fetch Page 1
+      const { data, totalPages } = await fetchPage(1);
+
+      // REPLACE the list (don't append)
+      setMovies(data);
+
+      // Reset page counter to 2 (since we just grabbed 1)
+      setPage(2);
+      setHasMore(1 < totalPages);
+      setError(null);
+    } catch (err: any) {
+      console.log("❌ REFRESH FAILED:", err);
+      setError(err.message ?? "Unknown error");
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  return { movies, isLoading, error, refreshMovies: fetchPopularMovies };
+  // 4. Initial Load
+  useEffect(() => {
+    loadMore();
+  }, []);
+
+  return {
+    movies,
+    isLoading,
+    error,
+    loadMore, // Connect this to onEndReached
+    refresh, // Connect this to RefreshControl onRefresh
+  };
 };
 
 export default usePopularMovies;

@@ -13,4 +13,12 @@ export type MovieItemDataType = {
   release_date: string;
   tagline?: string;
   genres?: Genres[];
+  credits?: {
+    cast: {
+      id: number;
+      name: string;
+      character: string;
+      profile_path: string | null;
+    }[];
+  };
 };

@@ -17,6 +17,11 @@ export const useMovieSearch = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const searchMovieByTitle = useCallback(async (title: string) => {
+    if (!title.trim()) {
+      setMovies([]);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -28,20 +33,15 @@ export const useMovieSearch = () => {
             api_key: API_KEY,
             query: title,
           },
-        }
+        },
       );
 
-      let validMovies = response.data?.results;
-      if (Array.isArray(validMovies)) {
-        validMovies = validMovies.filter(isValidMovieData);
-      } else {
-        validMovies = [];
-      }
+      const rawResults = response.data?.results || [];
+      const validMovies = rawResults.filter(isValidMovieData);
 
-      //   setMovies(validMovies);
-      setMovies(response.data?.results);
-    } catch (err) {
-      setError("Error searching for movie");
+      setMovies(validMovies);
+    } catch (err: any) {
+      setError(err.message || "Error searching for movie");
       console.error("Error searching for movie:", err);
     } finally {
       setLoading(false);

@@ -57,12 +57,14 @@ export default function DetailsScreen() {
 
   const description = (overview?.length && overview) || errorMovieDetails;
   const imageUri = poster_path ?? backdrop_path ?? null;
-  // Use a local fallback image when there's no poster/backdrop path
+  // Use a local fallback image if there's no poster/backdrop path
   const imageSource = imageUri
     ? { uri: `https://image.tmdb.org/t/p/original${imageUri}` }
     : require("../../assets/get-movies-bg.jpg");
   const tagline = movDetails?.tagline ?? "";
   const movieGenres = getMovieGenres(movDetails?.genres || []);
+  const topActors = movDetails?.credits?.cast || [];
+  console.log("Top Actors: ", topActors);
 
   const dateTime = release_date?.length
     ? dayjs(release_date).format("YYYY")

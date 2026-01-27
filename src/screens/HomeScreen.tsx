@@ -21,7 +21,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { horizontalScale } from "../utils/ScalingUtil";
 
 export default function HomeScreen() {
-  const { movies, isLoading, error, refreshMovies } = usePopularMovies();
+  const { movies, isLoading, error, loadMore, refresh } = usePopularMovies();
   const [refreshing, setRefreshing] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState<MovieItemDataType[]>([]);
 
@@ -31,14 +31,10 @@ export default function HomeScreen() {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    refreshMovies()
-      .then(() => {
-        setRefreshing(false);
-      })
-      .catch(() => {
-        setRefreshing(false);
-      });
-  }, [refreshMovies]);
+    refresh()
+      .then(() => setRefreshing(false))
+      .catch(() => setRefreshing(false));
+  }, [refresh]);
 
   const resetScrollPos = () => {
     if (flatListRef.current) {
@@ -55,7 +51,7 @@ export default function HomeScreen() {
     ({ item, index }: { item: MovieItemDataType; index: number }) => (
       <MovieListItem item={item} index={index} />
     ),
-    []
+    [],
   );
 
   const renderFooter = useCallback(() => {
@@ -67,9 +63,7 @@ export default function HomeScreen() {
     return (
       <View style={styles.parentContainer}>
         <Text style={styles.errorText}>{errorLoadingMovieList}!</Text>
-        {error && (
-           <Text style={styles.errorText}>{error}</Text>
-        )}
+        {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
     );
   }, [error]);
@@ -88,7 +82,7 @@ export default function HomeScreen() {
       },
       useNativeDriver: false, // The native drivers don't support scroll animations
     }),
-    []
+    [],
   );
 
   return (
@@ -110,12 +104,12 @@ export default function HomeScreen() {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={onRefresh}
+            onRefresh={onRefresh} // Uses the 'reset' logic
             tintColor={colors.rust}
           />
         }
         onScroll={handleScroll}
-        onEndReached={refreshMovies}
+        onEndReached={loadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />

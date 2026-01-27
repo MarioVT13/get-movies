@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { MovieItemDataType } from "../types/DataTypes";
-import { isValidMovieData } from "../utils/ServiceDataUtil";
 import { API_KEY, BASE_URL } from "../GlobalConsts";
 
 const useMovieDetails = ({ id }: { id: number }) => {
@@ -10,16 +9,28 @@ const useMovieDetails = ({ id }: { id: number }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchPopularMovies = async () => {
+    const fetchMovieDetails = async () => {
       setIsLoading(true);
       try {
         const response = await axios.get(`${BASE_URL}/movie/${id}`, {
           params: {
             api_key: API_KEY,
+            append_to_response: "credits", // needed param for actors info
           },
         });
 
-        setMovDetails(response.data);
+        const fullCast = response.data.credits?.cast || [];
+        // keep only the top 3 actors and get rid of the massive data dump
+        const top3Actors = fullCast.slice(0, 3);
+
+        const cleanedData = {
+          ...response.data,
+          credits: {
+            cast: top3Actors,
+          },
+        };
+
+        setMovDetails(cleanedData);
       } catch (err: any) {
         setError(err?.message ?? "Unknown");
       } finally {
@@ -27,8 +38,8 @@ const useMovieDetails = ({ id }: { id: number }) => {
       }
     };
 
-    fetchPopularMovies();
-  }, []);
+    fetchMovieDetails();
+  }, [id]);
 
   return { movDetails, isLoading, error };
 };

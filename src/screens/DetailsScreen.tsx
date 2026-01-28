@@ -64,7 +64,6 @@ export default function DetailsScreen() {
   const tagline = movDetails?.tagline ?? "";
   const movieGenres = getMovieGenres(movDetails?.genres || []);
   const topActors = movDetails?.credits?.cast || [];
-  console.log("Top Actors: ", topActors);
 
   const dateTime = release_date?.length
     ? dayjs(release_date).format("YYYY")
@@ -111,6 +110,16 @@ export default function DetailsScreen() {
     setShowConfirmMsg(true);
   };
 
+  const actorName = (name: string) => {
+    if (!name || name.length === 0) return null;
+
+    return (
+      <Text key={name} style={styles.actorName}>
+        {name}
+      </Text>
+    );
+  };
+
   return (
     <ImageBackground
       source={require("../../assets/get-movies-bg.jpg")}
@@ -126,22 +135,35 @@ export default function DetailsScreen() {
           resizeMode="cover"
         >
           <View style={styles.overlay} />
+
+          <Text
+            style={[
+              styles.descriptionText,
+              {
+                fontFamily: customFonts.latoBlack,
+                marginTop: verticalScale(100),
+                marginBottom: "2%",
+                width: "83%",
+                textAlign: "center",
+              },
+            ]}
+          >
+            {tagline}
+          </Text>
+          <View style={styles.thematicBreak} />
+
           <Animated.ScrollView
+            style={{ flex: 1, width: "100%" }}
             contentContainerStyle={styles.scrollView}
             showsVerticalScrollIndicator={false}
             entering={FadeInDown.duration(400).mass(2).damping(20).delay(400)}
           >
-            <Text
-              style={[
-                styles.descriptionText,
-                { fontFamily: customFonts.latoBlack, marginBottom: "2%" },
-              ]}
-            >
-              {tagline}
-            </Text>
-            <View style={styles.thematicBreak} />
             <Text style={styles.descriptionText}>{description}</Text>
+            <View style={styles.actorsContainer}>
+              {topActors.map((actor) => actorName(actor?.name))}
+            </View>
           </Animated.ScrollView>
+
           <BackHeader
             title={title}
             genres={movieGenres}
@@ -249,10 +271,16 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: horizontalScale(11),
   },
+  thematicBreak: {
+    height: 1,
+    backgroundColor: "#ddd",
+    width: "83%",
+    marginTop: "2%",
+  },
   scrollView: {
     paddingHorizontal: "8%",
-    paddingTop: "40%",
-    paddingBottom: "10%",
+    paddingTop: "10%",
+    paddingBottom: "30%",
   },
   descriptionText: {
     color: colors.white,
@@ -260,11 +288,26 @@ const styles = StyleSheet.create({
     lineHeight: horizontalScale(24),
     fontFamily: customFonts.lato,
   },
-  thematicBreak: {
-    height: 1,
-    backgroundColor: "#ddd",
-    width: "100%",
-    marginBottom: "5%",
+  actorsContainer: {
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: "10%",
+    width: "60%",
+    padding: verticalScale(10),
+    paddingHorizontal: horizontalScale(30),
+    backgroundColor: colors.semiTransparentLight,
+    transform: [{ rotate: "5deg" }],
+  },
+  actorName: {
+    color: colors.yellow,
+    fontSize: horizontalScale(14),
+    fontFamily: customFonts.latoBlack,
+    transform: [{ rotate: "-15deg" }],
+    backgroundColor: colors.antiqueBronze,
+    opacity: 0.75,
+    paddingHorizontal: horizontalScale(5),
   },
   bottomButtonsContainer: {
     position: "absolute",

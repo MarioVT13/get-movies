@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -11,6 +11,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  FadeIn,
+  FadeOut,
 } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/Ionicons";
 import { colors, customFonts } from "../GlobalConsts";
@@ -26,15 +28,23 @@ import { useMovieStore } from "../store/movieStore";
 
 interface FloatingSearchBarProps {
   onResults: (movies: MovieItemDataType[]) => void;
+  onTabChange?: (tab: string) => void;
 }
 
-const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
+const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({
+  onResults,
+  onTabChange,
+}) => {
   const [query, setQuery] = useState("");
   const { movies, searchMovieByTitle, error, loading } = useMovieSearch();
   const [nothingFound, setNothingFound] = useState<boolean>(false);
   const bounceValue = useSharedValue(0);
 
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
+  const [showTabs, setShowTabs] = useState(true);
+  const tabs = ["MOVIES", "TV"];
+  const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
+
   const { navigate } = useNavigation<RootStackNavigationProp>();
   const deleteFavMovie = useMovieStore((state) => state.removeMovie);
 
@@ -68,17 +78,24 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
 
   useEffect(() => {
     // if user clears the text manually, clear the search res as well
-    if (!query.length) onResults([]);
+    if (!query.length) {
+      onResults([]);
+      setShowTabs(true);
+    }
   }, [query]);
 
   const clearText = () => {
     setQuery("");
     onResults([]); // on clear text, clear search results too
+    setShowTabs(true);
   };
 
   const handleSearch = async () => {
     // do not initiate a search on an empty string, as it triggers the loader needlessly
-    if (query.length) await searchMovieByTitle(query);
+    if (query.length) {
+      await searchMovieByTitle(query);
+      setShowTabs(false);
+    }
   };
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -105,6 +122,30 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
   const searchButtonColor = useCallback(() => {
     return nothingFound ? colors.red : colors.lightGray;
   }, [nothingFound]);
+
+  useEffect(() => {
+    if (onTabChange) {
+      onTabChange(selectedTab);
+    }
+  }, [selectedTab]);
+
+  const TabButtons = useMemo(() => {
+    return tabs.map((tab) => (
+      <TouchableOpacity
+        key={tab}
+        onPress={() => {
+          setSelectedTab(tab);
+        }}
+        style={styles.tabButton}
+      >
+        <Text
+          style={[styles.tabText, selectedTab === tab && styles.tabSelected]}
+        >
+          {tab}
+        </Text>
+      </TouchableOpacity>
+    ));
+  }, [selectedTab]);
 
   return (
     <View style={styles.parentContainer}>
@@ -161,6 +202,16 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({ onResults }) => {
 
         {error && <Text style={styles.error}>Error</Text>}
       </View>
+
+      {showTabs && (
+        <Animated.View
+          style={styles.tabsContainer}
+          entering={FadeIn.duration(800)}
+          exiting={FadeOut.duration(500)}
+        >
+          {TabButtons}
+        </Animated.View>
+      )}
 
       <PortalPopup
         visible={isVisiblePopup}
@@ -245,6 +296,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     justifyContent: "center",
     alignItems: "center",
+  },
+  tabsContainer: {
+    width: "100%",
+    paddingHorizontal: horizontalScale(50),
+    position: "absolute",
+    flexDirection: "row",
+    top: verticalScale(45),
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  tabText: {
+    fontSize: horizontalScale(14),
+    fontFamily: customFonts.lato,
+    color: colors.copper,
+  },
+  tabButton: {
+    padding: verticalScale(5),
+    borderRadius: 20,
+  },
+  tabSelected: {
+    color: colors.antiqueBronze,
+    textDecorationLine: "underline",
+    textDecorationColor: colors.copper,
+    textDecorationStyle: "dotted",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: horizontalScale(12),
+    textShadowColor: colors.antiqueBronze,
   },
   shadowStyle: {
     shadowColor: "#000",

@@ -37,12 +37,12 @@ export default function MovieListItem(props: MovieItem) {
           { marginRight: middleSpaceBetweenItems },
         ]}
         entering={
-          index <= 11
-            ? StretchInX.duration(400)
+          index <= 9
+            ? StretchInX.duration(500)
                 .springify()
-                .mass(1)
-                .damping(40)
-                .delay((index + 1) * 200)
+                .mass(0.5)
+                .damping(9)
+                .delay((index + 1) * 80)
             : undefined
         }
       >

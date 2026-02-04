@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import MovieListItem from "../components/MovieListItem";
 import usePopularMovies from "../hooks/usePopularMovies";
+import usePopularTV from "../hooks/usePopularTV";
 import { MovieItemDataType } from "../types/DataTypes";
 import { colors, errorLoadingMovieList } from "../GlobalConsts";
 import FloatingSearchBar from "../components/FloatingSearchBar";
@@ -21,20 +22,54 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { horizontalScale } from "../utils/ScalingUtil";
 
 export default function HomeScreen() {
-  const { movies, isLoading, error, loadMore, refresh } = usePopularMovies();
+  // 1. Load BOTH hooks
+  const {
+    movies,
+    isLoading: isLoadingMovies,
+    error: errorMovies,
+    loadMore: loadMoreMovies,
+    refresh: refreshMovies,
+  } = usePopularMovies();
+
+  const {
+    tvShows,
+    isLoading: isLoadingTV,
+    error: errorTV,
+    loadMore: loadMoreTV,
+    refresh: refreshTV,
+  } = usePopularTV();
+
   const [refreshing, setRefreshing] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState<MovieItemDataType[]>([]);
+
+  // 2. Track Active Tab ("MOVIES" or "TV")
+  const [activeTab, setActiveTab] = useState("MOVIES");
 
   const flatListRef = useRef<FlatList>(null);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollButton, setShowScrollButton] = useState(false);
 
+  // 3. Dynamic Helpers based on Tab
+  const isMoviesTab = activeTab === "MOVIES";
+  const currentError = isMoviesTab ? errorMovies : errorTV;
+  const currentLoading = isMoviesTab ? isLoadingMovies : isLoadingTV;
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    refresh()
+    const refreshAction = isMoviesTab ? refreshMovies : refreshTV;
+
+    refreshAction()
       .then(() => setRefreshing(false))
       .catch(() => setRefreshing(false));
-  }, [refresh]);
+  }, [refreshMovies, refreshTV, isMoviesTab]);
+
+  const loadMoreData = () => {
+    if (isMoviesTab) {
+      loadMoreMovies();
+    } else {
+      loadMoreTV();
+    }
+  };
 
   const resetScrollPos = () => {
     if (flatListRef.current) {
@@ -47,6 +82,11 @@ export default function HomeScreen() {
     resetScrollPos();
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    resetScrollPos();
+  };
+
   const renderItem = useCallback(
     ({ item, index }: { item: MovieItemDataType; index: number }) => (
       <MovieListItem item={item} index={index} />
@@ -55,24 +95,29 @@ export default function HomeScreen() {
   );
 
   const renderFooter = useCallback(() => {
-    if (!isLoading || filteredMovies?.length > 0) return null;
+    // Only show loader if we are fetching more pages
+    if (!currentLoading || filteredMovies?.length > 0) return null;
     return <ActivityIndicator color={colors.rust} size="large" />;
-  }, [isLoading]);
+  }, [currentLoading, filteredMovies]);
 
   const errorMessage = useMemo(() => {
     return (
       <View style={styles.parentContainer}>
         <Text style={styles.errorText}>{errorLoadingMovieList}!</Text>
-        {error && <Text style={styles.errorText}>{error}</Text>}
+        {currentError && <Text style={styles.errorText}>{currentError}</Text>}
       </View>
     );
-  }, [error]);
+  }, [currentError]);
 
-  if (error) return errorMessage;
+  if (currentError) return errorMessage;
 
-  const moviesData = useMemo(() => {
-    return filteredMovies.length > 0 ? filteredMovies : movies;
-  }, [filteredMovies, movies]);
+  // 4. Determine Data Source
+  const displayedData = useMemo(() => {
+    // If we have search results, they take priority
+    if (filteredMovies.length > 0) return filteredMovies;
+
+    return isMoviesTab ? movies : tvShows;
+  }, [filteredMovies, movies, tvShows, isMoviesTab]);
 
   const handleScroll = useCallback(
     Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
@@ -92,9 +137,9 @@ export default function HomeScreen() {
     >
       <FlatList
         ref={flatListRef}
-        data={moviesData}
+        data={displayedData}
         keyExtractor={(item: MovieItemDataType, index: number) =>
-          `${item.id}_${index}`
+          `${item.id}_${item.media_type}_${index}`
         }
         renderItem={({ item, index }) => renderItem({ item, index })}
         initialNumToRender={10}
@@ -104,16 +149,21 @@ export default function HomeScreen() {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={onRefresh} // Uses the 'reset' logic
+            onRefresh={onRefresh}
             tintColor={colors.rust}
           />
         }
         onScroll={handleScroll}
-        onEndReached={loadMore}
+        onEndReached={loadMoreData}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
-      <FloatingSearchBar onResults={handleSearchResults} />
+
+      <FloatingSearchBar
+        onResults={handleSearchResults}
+        onTabChange={handleTabChange}
+      />
+
       {showScrollButton && (
         <TouchableOpacity
           onPress={() => resetScrollPos()}
@@ -138,8 +188,8 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     marginTop: "20%",
-    minWidth: "100%", // minWidth is needed here to avoid a bug when there is only 1 item in the list
-    paddingVertical: "20%",
+    minWidth: "100%",
+    paddingVertical: "25%",
     paddingHorizontal: "8%",
   },
   errorText: {

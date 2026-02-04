@@ -61,7 +61,7 @@ export default function BounceButton({ onPress }: BounceButtonProps) {
           <TouchableOpacity onPress={() => btnAlert()}>
             <Icon
               name={"happy-outline"}
-              size={horizontalScale(30)}
+              size={horizontalScale(28)}
               color={colors.gray}
             />
           </TouchableOpacity>

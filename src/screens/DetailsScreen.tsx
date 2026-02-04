@@ -45,6 +45,7 @@ export default function DetailsScreen() {
     release_date,
     poster_path,
     backdrop_path,
+    media_type,
   } = navParams?.data || {};
 
   const addMovie = useMovieStore((state) => state.addMovie);
@@ -53,7 +54,10 @@ export default function DetailsScreen() {
 
   const [showConfirmMsg, setShowConfirmMsg] = useState(false);
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
-  const { movDetails, isLoading, error } = useMovieDetails({ id });
+  const { movDetails, isLoading, error } = useMovieDetails({
+    id,
+    type: media_type,
+  });
 
   const description = (overview?.length && overview) || errorMovieDetails;
   const imageUri = poster_path ?? backdrop_path ?? null;

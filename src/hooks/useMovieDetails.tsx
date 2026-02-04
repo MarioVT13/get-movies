@@ -3,16 +3,28 @@ import axios from "axios";
 import { MovieItemDataType } from "../types/DataTypes";
 import { API_KEY, BASE_URL } from "../GlobalConsts";
 
-const useMovieDetails = ({ id }: { id: number }) => {
+// Add a 'type' prop to the hook arguments
+const useMovieDetails = ({
+  id,
+  type = "movie",
+}: {
+  id: number;
+  type?: string;
+}) => {
   const [movDetails, setMovDetails] = useState<MovieItemDataType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
+      if (!id) return;
+
       setIsLoading(true);
       try {
-        const response = await axios.get(`${BASE_URL}/movie/${id}`, {
+        // If type is 'tv', use 'tv', otherwise default to 'movie'
+        const endpoint = type === "tv" ? "tv" : "movie";
+
+        const response = await axios.get(`${BASE_URL}/${endpoint}/${id}`, {
           params: {
             api_key: API_KEY,
             append_to_response: "credits", // needed param for actors info
@@ -20,11 +32,13 @@ const useMovieDetails = ({ id }: { id: number }) => {
         });
 
         const fullCast = response.data.credits?.cast || [];
-        // keep only the top 3 actors and get rid of the massive data dump
         const top3Actors = fullCast.slice(0, 3);
 
         const cleanedData = {
           ...response.data,
+          title: response.data.title || response.data.name,
+          release_date:
+            response.data.release_date || response.data.first_air_date,
           credits: {
             cast: top3Actors,
           },
@@ -39,7 +53,7 @@ const useMovieDetails = ({ id }: { id: number }) => {
     };
 
     fetchMovieDetails();
-  }, [id]);
+  }, [id, type]);
 
   return { movDetails, isLoading, error };
 };

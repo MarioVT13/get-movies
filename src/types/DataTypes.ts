@@ -21,4 +21,5 @@ export type MovieItemDataType = {
       profile_path: string | null;
     }[];
   };
+  media_type?: "movie" | "tv" | "person";
 };

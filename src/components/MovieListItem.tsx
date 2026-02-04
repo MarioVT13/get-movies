@@ -38,11 +38,11 @@ export default function MovieListItem(props: MovieItem) {
         ]}
         entering={
           index <= 11
-            ? StretchInX.duration(800)
+            ? StretchInX.duration(400)
                 .springify()
                 .mass(1)
                 .damping(40)
-                .delay((index + 1) * 250)
+                .delay((index + 1) * 200)
             : undefined
         }
       >

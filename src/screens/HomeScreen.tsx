@@ -123,7 +123,7 @@ export default function HomeScreen() {
     Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
       listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        setShowScrollButton(offsetY > 250);
+        setShowScrollButton(offsetY > 100);
       },
       useNativeDriver: false, // The native drivers don't support scroll animations
     }),
@@ -162,6 +162,7 @@ export default function HomeScreen() {
       <FloatingSearchBar
         onResults={handleSearchResults}
         onTabChange={handleTabChange}
+        hideTabs={showScrollButton || !!filteredMovies?.length}
       />
 
       {showScrollButton && (

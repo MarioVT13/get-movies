@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Keyboard,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -29,11 +30,13 @@ import { useMovieStore } from "../store/movieStore";
 interface FloatingSearchBarProps {
   onResults: (movies: MovieItemDataType[]) => void;
   onTabChange?: (tab: string) => void;
+  hideTabs?: boolean;
 }
 
 const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({
   onResults,
   onTabChange,
+  hideTabs = false,
 }) => {
   const [query, setQuery] = useState("");
   const { movies, searchMovieByTitle, error, loading } = useMovieSearch();
@@ -41,7 +44,6 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({
   const bounceValue = useSharedValue(0);
 
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
-  const [showTabs, setShowTabs] = useState(true);
   const tabs = ["MOVIES", "TV"];
   const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
 
@@ -80,21 +82,20 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({
     // if user clears the text manually, clear the search res as well
     if (!query.length) {
       onResults([]);
-      setShowTabs(true);
     }
   }, [query]);
 
   const clearText = () => {
     setQuery("");
     onResults([]); // on clear text, clear search results too
-    setShowTabs(true);
   };
 
   const handleSearch = async () => {
+    Keyboard.dismiss();
+
     // do not initiate a search on an empty string, as it triggers the loader needlessly
     if (query.length) {
       await searchMovieByTitle(query);
-      setShowTabs(false);
     }
   };
 
@@ -203,10 +204,10 @@ const FloatingSearchBar: React.FC<FloatingSearchBarProps> = ({
         {error && <Text style={styles.error}>Error</Text>}
       </View>
 
-      {showTabs && (
+      {!hideTabs && (
         <Animated.View
           style={styles.tabsContainer}
-          entering={FadeIn.duration(800)}
+          entering={FadeIn.duration(600)}
           exiting={FadeOut.duration(500)}
         >
           {TabButtons}
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
     textDecorationColor: colors.copper,
     textDecorationStyle: "dotted",
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: horizontalScale(12),
+    textShadowRadius: horizontalScale(10),
     textShadowColor: colors.antiqueBronze,
   },
   shadowStyle: {

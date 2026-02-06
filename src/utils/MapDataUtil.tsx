@@ -105,7 +105,7 @@ const languageMap: Record<string, string> = {
 };
 
 export const getLanguageName = (code: string | undefined): string => {
-  if (!code) return "Unknown";
+  if (!code) return "";
 
   // Try the manual map first
   if (languageMap[code]) {

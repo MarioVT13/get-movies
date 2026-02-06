@@ -176,7 +176,7 @@ export default function DetailsScreen() {
             rating={vote_average}
             style={{ height: "12%" }}
           />
-          {dateTime && (
+          {(dateTime || language) && (
             <Animated.View
               style={styles.dateTextContainer}
               entering={SlideInRight.duration(700)
@@ -185,8 +185,8 @@ export default function DetailsScreen() {
                 .damping(30)
                 .delay(500)}
             >
-              <Text style={[styles.dateText]}>{dateTime}</Text>
-              <Text style={styles.languageText}>{language}</Text>
+              {dateTime && <Text style={[styles.dateText]}>{dateTime}</Text>}
+              {language && <Text style={styles.languageText}>{language}</Text>}
             </Animated.View>
           )}
 

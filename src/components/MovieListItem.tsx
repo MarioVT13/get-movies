@@ -7,12 +7,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import Animated, { StretchInX } from "react-native-reanimated";
 import { colors, customFonts, errorMovieTitle } from "../GlobalConsts";
-import { verticalScale } from "../utils/ScalingUtil";
+import { horizontalScale, verticalScale } from "../utils/ScalingUtil";
 import { RootStackNavigationProp } from "../navigation/stacks/RootStack";
 import { MovieItemDataType } from "../types/DataTypes";
+import RatingComponent from "./RatingComponent";
 
 interface MovieItem {
   item: MovieItemDataType;
@@ -21,7 +23,7 @@ interface MovieItem {
 
 export default function MovieListItem(props: MovieItem) {
   const { item, index } = props;
-  const { title, poster_path, backdrop_path } = item;
+  const { title, poster_path, backdrop_path, vote_average } = item;
   const { navigate } = useNavigation<RootStackNavigationProp>();
 
   const middleSpaceBetweenItems = index % 2 == 0 ? "4%" : 0;
@@ -65,6 +67,13 @@ export default function MovieListItem(props: MovieItem) {
               style={styles.image}
             />
           </ImageBackground>
+
+          <View style={styles.ratingUnderlay} />
+          <RatingComponent
+            rating={vote_average}
+            containerStyle={styles.ratingContainer}
+            isDisabledAnim={true}
+          />
           <Text style={styles.title}>
             {title.length !== 0 ? title?.toUpperCase() : errorMovieTitle}
           </Text>
@@ -92,6 +101,22 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: verticalScale(170),
+  },
+  ratingUnderlay: {
+    opacity: 0.5,
+    width: horizontalScale(60),
+    height: horizontalScale(60),
+    position: "absolute",
+    top: horizontalScale(-20),
+    right: horizontalScale(-20),
+    backgroundColor: colors.black,
+    borderRadius: 100,
+  },
+  ratingContainer: {
+    transform: [{ scale: 0.8 }],
+    position: "absolute",
+    top: horizontalScale(20),
+    right: horizontalScale(20),
   },
   title: {
     marginVertical: 5,

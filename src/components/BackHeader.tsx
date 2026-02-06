@@ -59,13 +59,11 @@ export default function BackHeader(props: Props) {
             {genres}
           </Animated.Text>
         </View>
-        {/* rating is kept but no longer opens the popup (popup was moved to FloatingSearchBar) */}
-        <View style={styles.ratingComponentContainer}>
-          <RatingComponent rating={rating} />
-        </View>
+        <RatingComponent
+          rating={rating}
+          containerStyle={styles.ratingContainer}
+        />
       </View>
-
-      {/* PortalPopup moved to FloatingSearchBar */}
     </>
   );
 }
@@ -97,7 +95,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: customFonts.bangers,
   },
-  ratingComponentContainer: {
+  ratingContainer: {
     width: "20%",
   },
   genres: {

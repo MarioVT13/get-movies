@@ -1,14 +1,26 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ViewStyle } from "react-native";
 import { colors, customFonts } from "../GlobalConsts";
 import { horizontalScale } from "../utils/ScalingUtil";
 import Animated, { PinwheelIn } from "react-native-reanimated";
 
-const RatingComponent = ({ rating }: { rating: number }) => {
+const RatingComponent = ({
+  rating,
+  containerStyle,
+  isDisabledAnim = false,
+}: {
+  rating: number;
+  containerStyle?: ViewStyle;
+  isDisabledAnim?: boolean;
+}) => {
   return (
     <Animated.View
-      style={styles.container}
-      entering={PinwheelIn.duration(500).mass(2).damping(20).delay(400)}
+      style={[styles.container, containerStyle]}
+      entering={
+        isDisabledAnim
+          ? undefined
+          : PinwheelIn.duration(500).mass(2).damping(20).delay(400)
+      }
     >
       <View style={styles.star}>
         <View style={[styles.line, styles.line1]} />

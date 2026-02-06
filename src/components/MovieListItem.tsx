@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     height: verticalScale(170),
   },
   ratingUnderlay: {
-    opacity: 0.5,
+    opacity: 0.3,
     width: horizontalScale(60),
     height: horizontalScale(60),
     position: "absolute",

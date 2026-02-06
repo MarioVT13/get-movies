@@ -24,7 +24,7 @@ import BackHeader from "../components/BackHeader";
 import BounceButton from "../components/BounceButton";
 import useMovieDetails from "../hooks/useMovieDetails";
 import { MovieItemDataType } from "../types/DataTypes";
-import { getMovieGenres } from "../utils/MapDataUtil";
+import { getLanguageName, getMovieGenres } from "../utils/MapDataUtil";
 import { PlusButton } from "../components/PlusButton";
 import ShareButton from "../components/ShareButton";
 import { useMovieStore } from "../store/movieStore";
@@ -46,6 +46,7 @@ export default function DetailsScreen() {
     poster_path,
     backdrop_path,
     media_type,
+    original_language,
   } = navParams?.data || {};
 
   const addMovie = useMovieStore((state) => state.addMovie);
@@ -72,6 +73,7 @@ export default function DetailsScreen() {
   const dateTime = release_date?.length
     ? dayjs(release_date).format("YYYY")
     : null;
+  const language = getLanguageName(original_language);
 
   const cardRef = useRef<View>(null);
 
@@ -184,6 +186,7 @@ export default function DetailsScreen() {
                 .delay(500)}
             >
               <Text style={[styles.dateText]}>{dateTime}</Text>
+              <Text style={styles.languageText}>{language}</Text>
             </Animated.View>
           )}
 
@@ -274,6 +277,10 @@ const styles = StyleSheet.create({
   dateText: {
     color: colors.white,
     fontSize: horizontalScale(11),
+  },
+  languageText: {
+    fontSize: horizontalScale(8),
+    color: colors.yellow,
   },
   thematicBreak: {
     height: 1,

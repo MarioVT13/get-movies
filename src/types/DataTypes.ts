@@ -22,4 +22,5 @@ export type MovieItemDataType = {
     }[];
   };
   media_type?: "movie" | "tv" | "person";
+  original_language: string;
 };
